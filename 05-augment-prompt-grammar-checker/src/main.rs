@@ -2,15 +2,10 @@ use async_openai::{
     error::OpenAIError,
     types::responses::{CreateResponse, Input},
 };
-use common::{get_user_input, print_llm_output};
-use tracing::{Level, error};
-use tracing_subscriber::FmtSubscriber;
+use common::{error, get_user_input, print_llm_output};
 
 #[tokio::main]
 async fn main() {
-    FmtSubscriber::builder()
-        .with_max_level(Level::TRACE)
-        .finish();
     let args = common::Args::parse_args();
     let client = args.create_client();
 

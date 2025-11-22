@@ -222,6 +222,8 @@ dependencies = [
  "serde_json",
  "termcolor",
  "tokio",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

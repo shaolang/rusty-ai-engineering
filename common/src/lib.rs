@@ -1,8 +1,11 @@
 use std::io::Write;
 
 use async_openai::{Client, config::OpenAIConfig};
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+use tracing::Level;
+pub use tracing::{info, error};
+use tracing_subscriber::FmtSubscriber;
 
 pub fn extract_content_from_json(s: &str) -> String {
     let v = serde_json::from_str::<serde_json::Value>(s).expect("json content");
@@ -58,12 +61,27 @@ pub struct Args {
 
     #[arg(short, long)]
     pub max_tokens: Option<u32>,
+
+    #[arg(short, long, default_value="info")]
+    log_level: LogLevel
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+enum LogLevel {
+    Info,
+    Error,
 }
 
 impl Args {
     pub fn parse_args() -> Self {
         let args = Self::parse();
         args.validate();
+
+        let log_level = match args.log_level {
+            LogLevel::Info => Level::INFO,
+            LogLevel::Error => Level::ERROR,
+        };
+        FmtSubscriber::builder().with_max_level(log_level).finish();
 
         args
     }
