@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use async_openai::{
     Client,
     config::OpenAIConfig,
@@ -30,7 +32,8 @@ async fn main() {
 
 fn get_user_input() -> Option<String> {
     loop {
-        println!("Enter a phrase, and I'll translate it into Spanish!");
+        print!("\nEnter a phrase, and I'll translate it into Spanish!\n(Enter quit to end) > ");
+        std::io::stdout().flush().unwrap();
         let mut input = String::new();
         std::io::stdin()
             .read_line(&mut input)
@@ -48,7 +51,12 @@ fn get_user_input() -> Option<String> {
 }
 
 fn create_response_requuest(args: &Args, user_input: &str) -> CreateResponse {
-    let input = format!("Translate the following phrase into Spanish: {user_input}");
+    let input = format!(
+        "Translate the following phrase into Spanish: {user_input}.
+
+        Answer with just the translation and no other introductory text.
+        "
+    );
 
     CreateResponse {
         input: Input::Text(input),
