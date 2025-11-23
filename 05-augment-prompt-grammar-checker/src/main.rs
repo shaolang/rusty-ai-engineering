@@ -1,24 +1,15 @@
-use async_openai::{
-    error::OpenAIError,
-    types::responses::{CreateResponse, Input},
-};
-use common::{error, get_user_input, print_llm_output};
+use async_openai::types::responses::{CreateResponse, Input};
+use common::{ResponseExt, get_user_input, print_llm_output};
 
 #[tokio::main]
 async fn main() {
     let args = common::Args::parse_args();
     let client = args.create_client();
 
-    while let Some(input) = get_user_input("Enter phrase for checking", "quit") {
+    while let Some(input) = get_user_input("Enter phrase for checking", "quit", true) {
         let req = create_response_request(&args, &input);
-        match client.responses().create(req).await {
-            Ok(resp) => print_llm_output(&resp.output_text.unwrap()),
-            Err(OpenAIError::JSONDeserialize(e, content)) => {
-                error!("Error occurred: {e}. Attempting to extract only content from output");
-                print_llm_output(&common::extract_content_from_json(&content));
-            }
-            Err(e) => error!("Error occurred: {e}"),
-        }
+        let output = client.responses().create(req).await.extract_output();
+        print_llm_output(&output);
     }
 }
 

@@ -1,10 +1,10 @@
 use std::io::Write;
 
-use async_openai::{Client, config::OpenAIConfig};
+use async_openai::{Client, config::OpenAIConfig, error::OpenAIError, types::responses::Response};
 use clap::{Parser, ValueEnum};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 use tracing::Level;
-pub use tracing::{info, error};
+pub use tracing::{error, info};
 use tracing_subscriber::FmtSubscriber;
 
 pub fn extract_content_from_json(s: &str) -> String {
@@ -17,9 +17,14 @@ pub fn extract_content_from_json(s: &str) -> String {
         .to_string()
 }
 
-pub fn get_user_input(input_prompt: &str, quit_phrase: &str) -> Option<String> {
+pub fn get_user_input(input_prompt: &str, quit_phrase: &str, print_prompt: bool) -> Option<String> {
     loop {
-        print!("\n{input_prompt}\n(Enter {quit_phrase}) to end)> ");
+        if print_prompt {
+            print!("\n{input_prompt}\nEnter {quit_phrase} to end> ");
+        } else {
+            print!("Enter {quit_phrase} to end> ");
+        }
+
         std::io::stdout().flush().expect("successful stdout flush");
         let mut input = String::new();
         std::io::stdin()
@@ -48,6 +53,10 @@ pub fn print_llm_output(s: &str) {
     stdout.set_color(&color_spec).expect("clear set color");
 }
 
+pub trait ResponseExt<T> {
+    fn extract_output(self) -> String;
+}
+
 #[derive(Debug, Parser)]
 pub struct Args {
     #[arg(long)]
@@ -62,8 +71,8 @@ pub struct Args {
     #[arg(short, long)]
     pub max_tokens: Option<u32>,
 
-    #[arg(short, long, default_value="info")]
-    log_level: LogLevel
+    #[arg(short, long, default_value = "info")]
+    log_level: LogLevel,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
@@ -81,7 +90,8 @@ impl Args {
             LogLevel::Info => Level::INFO,
             LogLevel::Error => Level::ERROR,
         };
-        FmtSubscriber::builder().with_max_level(log_level).finish();
+        let subscriber = FmtSubscriber::builder().with_max_level(log_level).finish();
+        tracing::subscriber::set_global_default(subscriber).expect("subscriber set succeeds");
 
         args
     }
@@ -105,6 +115,23 @@ impl Args {
                 "temperature must be between 0.0 and 2.0",
             )
             .exit();
+        }
+    }
+}
+
+impl ResponseExt<Result<Response, OpenAIError>> for Result<Response, OpenAIError> {
+    fn extract_output(self) -> String {
+        error!("{:?}", self);
+        match self {
+            Ok(resp) => resp.output_text.unwrap(),
+            Err(OpenAIError::JSONDeserialize(e, content)) => {
+                error!("Response JSON deserializing failed; attempting only text extraction: {e}");
+                extract_content_from_json(&content)
+            }
+            Err(e) => {
+                error!("error occurred: {e}");
+                "<an error occurred>".to_string()
+            }
         }
     }
 }

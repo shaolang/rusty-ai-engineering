@@ -102,8 +102,6 @@ dependencies = [
  "async-openai",
  "common",
  "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
