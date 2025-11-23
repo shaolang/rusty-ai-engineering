@@ -1,0 +1,9 @@
+[package]
+name    = 'history'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+async-openai = '0.30'
+common       = { path='../common' }
+tokio        = { version='1', features=['macros', 'rt-multi-thread'] }
