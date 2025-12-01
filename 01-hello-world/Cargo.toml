@@ -1,0 +1,9 @@
+[package]
+name    = 'hello-world'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+async-openai = { version='0.31', features=['responses'] }
+tokio        = { version='1', features=['macros', 'rt-multi-thread'] }
+utils        = { path='../utils' }
