@@ -1479,6 +1479,7 @@ version = "0.1.0"
 dependencies = [
  "argh",
  "async-openai",
+ "serde",
  "serde_json",
  "termcolor",
 ]

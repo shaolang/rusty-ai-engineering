@@ -12,11 +12,14 @@ async fn main() {
     let req = create_response_req(&args, "Who was the first person to land on the moon?");
 
     match client.responses().create(req).await {
-        Err(e) => cprintln(
-            Red,
-            &format!("Error occurred: {:?}", e.try_extract_output()),
-        ),
         Ok(resp) => cprintln(Green, &resp.output_text().unwrap_or("".to_string())),
+        Err(e) => {
+            if let Ok(text) = e.try_extract_output() {
+                cprintln(Green, &text);
+            } else {
+                cprintln(Red, &format!("Error occurred: {e:?}"));
+            }
+        }
     }
 }
 

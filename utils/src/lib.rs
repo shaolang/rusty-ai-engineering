@@ -1,7 +1,8 @@
 use std::io::Write;
 
 use argh::FromArgs;
-use async_openai::{error::OpenAIError};
+use async_openai::error::OpenAIError;
+use serde::Deserialize;
 pub use termcolor::Color::{Cyan, Green, Red};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
@@ -23,7 +24,7 @@ pub fn cprintln(color: Color, text: &str) {
 pub fn parse_args() -> Args {
     let args: Args = argh::from_env();
 
-    if args.temperature < 0.0 && args.temperature > 2.0 {
+    if args.temperature < 0.0 || args.temperature > 2.0 {
         cprintln(Red, "Temperature must be between 0.0 and 2.0");
         std::process::exit(1);
     }
@@ -54,16 +55,35 @@ pub struct Args {
 
 impl OpenAIErrorExt for OpenAIError {
     fn try_extract_output(&self) -> Result<String, &OpenAIError> {
-        if let OpenAIError::JSONDeserialize(_, content) = self {
-            if let Ok(v) = serde_json::from_str::<serde_json::Value>(content) {
-                let output = v["output"].as_array().expect("output array");
-                let content = &output.last().expect("last item in output array").as_object().expect("content is a hashmap")["content"];
-                content.as_str().map(|s| s.to_string()).ok_or(self)
-            } else {
-                Err(self)
-            }
+        let OpenAIError::JSONDeserialize(_, content) = self else {
+            return Err(self);
+        };
+        let Ok(content) = serde_json::from_str::<ContentOnly>(content) else {
+            return Err(self);
+        };
+        if let Some(Some(text)) = content
+            .output
+            .last()
+            .map(|o| o.content.last().map(|c| c.text.to_string()))
+        {
+            Ok(text)
         } else {
             Err(self)
         }
     }
+}
+
+#[derive(Debug, Deserialize)]
+struct ContentOnly {
+    output: Vec<Output>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Output {
+    content: Vec<Content>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Content {
+    text: String,
 }
