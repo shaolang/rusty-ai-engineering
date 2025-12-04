@@ -24,3 +24,4 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
   * Augmenting the Prompt
     * [Pirate tone](./05-augment-prompt-pirates)
     * [Spanish translation](./05-augment-prompt-spanish-translation)
+    * [Grammar checker](./05-augment-prompt-grammar-checker)

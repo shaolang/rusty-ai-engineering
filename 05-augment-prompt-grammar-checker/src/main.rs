@@ -7,13 +7,13 @@ use utils::{Args, Green, cprintln, get_output_text_from_response, parse_args, re
 async fn main() {
     let args = parse_args();
 
-    let prompt = "Enter a phrase and I'll translate it into Spanish!\n> ";
+    let prompt = "Enter a phrase for grammar checking.\n> ";
     let user_input = read_stdin(Some(prompt.to_string()));
     let input = format!(
-        "{}: {}.\n\n{}",
-        "Translate the following phrase into Spanish",
-        user_input,
-        "Answer with just the translate and no other introductory text."
+        "Check the TEXT below for grammatical errors. If there are errors, simply rewrite the text
+         so that it's correct. If there are no errors, just output the original text. Here is the
+         TEXT: {}",
+        user_input
     );
 
     let client = create_client(&args);
