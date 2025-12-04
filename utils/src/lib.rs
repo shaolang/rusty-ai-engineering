@@ -1,7 +1,7 @@
 use std::io::Write;
 
 use argh::FromArgs;
-use async_openai::error::OpenAIError;
+use async_openai::{error::OpenAIError, types::responses::Response};
 use serde::Deserialize;
 pub use termcolor::Color::{Cyan, Green, Red};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
@@ -21,6 +21,20 @@ pub fn cprintln(color: Color, text: &str) {
     cprint(color, &format!("{text}\n"));
 }
 
+pub fn get_output_text_from_response(response: Result<Response, OpenAIError>) -> String {
+    match response {
+        Ok(resp) => resp.output_text().unwrap_or("".to_string()),
+        Err(e) => {
+            if let Ok(text) = e.try_extract_output() {
+                text
+            } else {
+                cprintln(Red, &format!("Error occurred: {e:?}"));
+                "".to_string()
+            }
+        }
+    }
+}
+
 pub fn parse_args() -> Args {
     let args: Args = argh::from_env();
 
@@ -30,6 +44,20 @@ pub fn parse_args() -> Args {
     }
 
     args
+}
+
+pub fn read_stdin(prompt: Option<String>) -> String {
+    if let Some(text) = prompt {
+        print!("{text}");
+        std::io::stdout().flush().expect("flush output succeeds");
+    }
+
+    let mut s = String::new();
+    std::io::stdin()
+        .read_line(&mut s)
+        .expect("read stdin succeeds");
+
+    s.trim().to_string()
 }
 
 pub trait OpenAIErrorExt {
