@@ -23,3 +23,4 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
 * Chapter 5: Building a Chatbot
   * Augmenting the Prompt
     * [Pirate tone](./05-augment-prompt-pirates)
+    * [Spanish translation](./05-augment-prompt-spanish-translation)
