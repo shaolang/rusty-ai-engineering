@@ -5,6 +5,7 @@ members  = [
   '05-augment-prompt-spanish-translation',
   '05-augment-prompt-grammar-checker',
   '05-multi-turn-dialogue',
+  '05-state-with-memory-systems',
 ]
 resolver = '3'
 
