@@ -19,9 +19,10 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
 ## Ports by Chapter
 
 * Chapter 1: HeLLMo, World!
-  * [Creating Our First App](./01-hello-world)
+  * [Creating Our First App](./01-hello-world/src/main.rs)
 * Chapter 5: Building a Chatbot
   * Augmenting the Prompt
-    * [Pirate tone](./05-augment-prompt-pirates)
-    * [Spanish translation](./05-augment-prompt-spanish-translation)
-    * [Grammar checker](./05-augment-prompt-grammar-checker)
+    * [Pirate tone](./05-augment-prompt-pirates/src/main.rs)
+    * [Spanish translation](./05-augment-prompt-spanish-translation/src/main.rs)
+    * [Grammar checker](./05-augment-prompt-grammar-checker/src/main.rs)
+  * [Multi-Turn Dialogue](./05-multi-turn-dialogue/src/main.rs)

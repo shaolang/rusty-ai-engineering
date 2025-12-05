@@ -12,7 +12,7 @@ pub fn cprint(color: Color, text: &str) {
     stdout
         .set_color(color_spec.set_fg(Some(color)))
         .expect("set color succeeds");
-    writeln!(&mut stdout, "{text}").expect("write w/ color to stdout succeeds");
+    write!(&mut stdout, "{text}").expect("write w/ color to stdout succeeds");
     color_spec.clear();
     stdout.set_color(&color_spec).expect("reset color succeeds");
 }

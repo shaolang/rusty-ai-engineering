@@ -3,7 +3,9 @@ members  = [
   '01-hello-world',
   '05-augment-prompt-pirates',
   '05-augment-prompt-spanish-translation',
-  '05-augment-prompt-grammar-checker']
+  '05-augment-prompt-grammar-checker',
+  '05-multi-turn-dialogue',
+]
 resolver = '3'
 
 [workspace.dependencies]
