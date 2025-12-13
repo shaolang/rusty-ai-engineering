@@ -1,7 +1,10 @@
-use std::io::Write;
+use std::{cell::RefCell, io::Write};
 
 use argh::FromArgs;
-use async_openai::{error::OpenAIError, types::responses::Response};
+use async_openai::error::OpenAIError;
+use async_openai::types::responses::{
+    InputItem, InputMessage, InputParam, InputRole, Item, MessageItem, OutputItem, Response,
+};
 use serde::Deserialize;
 pub use termcolor::Color::{Cyan, Green, Red};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
@@ -21,17 +24,28 @@ pub fn cprintln(color: Color, text: &str) {
     cprint(color, &format!("{text}\n"));
 }
 
-pub fn get_output_text_from_response(response: Result<Response, OpenAIError>) -> String {
+pub fn get_output(response: Result<Response, OpenAIError>) -> Result<Response, OpenAIError> {
     match response {
-        Ok(resp) => resp.output_text().unwrap_or("".to_string()),
-        Err(e) => {
-            if let Ok(text) = e.try_extract_output() {
-                text
-            } else {
-                cprintln(Red, &format!("Error occurred: {e:?}"));
-                "".to_string()
-            }
+        Ok(_) => response,
+        Err(e) => e.try_extract_response(),
+    }
+}
+
+pub fn get_output_from_response(
+    response: Result<Response, OpenAIError>,
+) -> Result<(String, Vec<OutputItem>), OpenAIError> {
+    match response {
+        Ok(resp) => {
+            let text = resp.output_text().unwrap_or("".to_string());
+            Ok((text, resp.output))
         }
+        Err(e) => match e.try_extract_output() {
+            Ok((text, output)) => Ok((text, vec![output])),
+            Err(err) => {
+                cprintln(Red, &format!("Error occurred: {:?}", err));
+                Err(err)
+            }
+        },
     }
 }
 
@@ -61,7 +75,8 @@ pub fn read_stdin(prompt: Option<String>) -> String {
 }
 
 pub trait OpenAIErrorExt {
-    fn try_extract_output(&self) -> Result<String, &OpenAIError>;
+    fn try_extract_output(self) -> Result<(String, OutputItem), OpenAIError>;
+    fn try_extract_response(self) -> Result<Response, OpenAIError>;
 }
 
 #[derive(FromArgs)]
@@ -82,36 +97,167 @@ pub struct Args {
 }
 
 impl OpenAIErrorExt for OpenAIError {
-    fn try_extract_output(&self) -> Result<String, &OpenAIError> {
-        let OpenAIError::JSONDeserialize(_, content) = self else {
-            return Err(self);
-        };
-        let Ok(content) = serde_json::from_str::<ContentOnly>(content) else {
-            return Err(self);
-        };
-        if let Some(Some(text)) = content
-            .output
-            .last()
-            .map(|o| o.content.last().map(|c| c.text.to_string()))
-        {
-            Ok(text)
+    fn try_extract_output(self) -> Result<(String, OutputItem), OpenAIError> {
+        let resp = self.try_extract_response()?;
+        let output = resp.output.last().expect("output exists");
+        if let async_openai::types::responses::OutputItem::Message(msg) = output {
+            let content = msg.content.last().expect("content exists");
+            if let async_openai::types::responses::OutputMessageContent::OutputText(text) = content
+            {
+                Ok((text.text.clone(), output.to_owned()))
+            } else {
+                Ok(("".to_string(), output.to_owned()))
+            }
         } else {
-            Err(self)
+            Ok(("".to_string(), output.to_owned()))
         }
+    }
+
+    fn try_extract_response(self) -> Result<Response, OpenAIError> {
+        let OpenAIError::JSONDeserialize(err, raw) = self else {
+            return Err(self);
+        };
+        let Ok(content) = serde_json::from_str::<ContentOnly>(&raw) else {
+            return Err(OpenAIError::JSONDeserialize(err, raw));
+        };
+        Ok(content.into())
     }
 }
 
 #[derive(Debug, Deserialize)]
 struct ContentOnly {
+    id: String,
     output: Vec<Output>,
 }
 
 #[derive(Debug, Deserialize)]
 struct Output {
+    id: String,
+    #[serde(default)]
     content: Vec<Content>,
 }
 
 #[derive(Debug, Deserialize)]
 struct Content {
     text: String,
+}
+
+#[derive(Default)]
+pub struct History {
+    items: RefCell<Vec<InputItem>>,
+}
+
+impl From<ContentOnly> for Response {
+    fn from(value: ContentOnly) -> Self {
+        Self {
+            id: value.id,
+            output: value
+                .output
+                .into_iter()
+                .filter(|o| !o.content.is_empty())
+                .map(|o| async_openai::types::responses::OutputItem::Message(o.into()))
+                .collect(),
+            background: Default::default(),
+            billing: Default::default(),
+            conversation: Default::default(),
+            created_at: Default::default(),
+            error: Default::default(),
+            incomplete_details: Default::default(),
+            instructions: Default::default(),
+            max_output_tokens: Default::default(),
+            metadata: Default::default(),
+            model: Default::default(),
+            object: Default::default(),
+            parallel_tool_calls: Default::default(),
+            previous_response_id: Default::default(),
+            prompt: Default::default(),
+            prompt_cache_key: Default::default(),
+            prompt_cache_retention: Default::default(),
+            reasoning: Default::default(),
+            safety_identifier: Default::default(),
+            service_tier: Default::default(),
+            status: async_openai::types::responses::Status::Completed,
+            temperature: Default::default(),
+            text: Default::default(),
+            tool_choice: Default::default(),
+            tools: Default::default(),
+            top_logprobs: Default::default(),
+            top_p: Default::default(),
+            truncation: Default::default(),
+            usage: Default::default(),
+        }
+    }
+}
+
+impl From<Output> for async_openai::types::responses::OutputMessage {
+    fn from(output: Output) -> Self {
+        Self {
+            id: output.id.to_owned(),
+            role: async_openai::types::responses::AssistantRole::Assistant,
+            status: async_openai::types::responses::OutputStatus::Completed,
+            content: output.content.into_iter().map(|o| o.into()).collect(),
+        }
+    }
+}
+
+impl From<Content> for async_openai::types::responses::OutputMessageContent {
+    fn from(content: Content) -> Self {
+        let text_content = async_openai::types::responses::OutputTextContent {
+            annotations: vec![],
+            logprobs: None,
+            text: content.text.to_string(),
+        };
+        async_openai::types::responses::OutputMessageContent::OutputText(text_content)
+    }
+}
+
+impl History {
+    pub fn new() -> Self {
+        Self {
+            items: RefCell::new(vec![]),
+        }
+    }
+
+    pub fn add_user_input(&self, text: &str) {
+        self.add_input(InputRole::User, text);
+    }
+
+    pub fn add_system_input(&self, text: &str) {
+        self.add_input(InputRole::System, text);
+    }
+
+    pub fn add_assistant_outputs(&self, outputs: &[OutputItem]) {
+        let mut items: Vec<InputItem> = outputs
+            .iter()
+            .filter_map(|m| {
+                if let OutputItem::Message(msg) = m {
+                    Some(InputItem::Item(Item::Message(MessageItem::Output(
+                        msg.to_owned(),
+                    ))))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        let mut history = self.items.take();
+        history.append(&mut items);
+        self.items.replace(history);
+    }
+
+    fn add_input(&self, role: InputRole, text: &str) {
+        let mut items = self.items.borrow_mut();
+        let input_msg = InputMessage {
+            content: vec![text.into()],
+            role,
+            status: None,
+        };
+        items.push(InputItem::Item(Item::Message(MessageItem::Input(
+            input_msg,
+        ))));
+    }
+
+    pub fn as_input_params(&self) -> InputParam {
+        let items = self.items.borrow().clone();
+        InputParam::Items(items)
+    }
 }

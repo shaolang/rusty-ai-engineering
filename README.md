@@ -27,3 +27,4 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
     * [Grammar checker](./05-augment-prompt-grammar-checker/src/main.rs)
   * [Multi-turn dialogue](./05-multi-turn-dialogue/src/main.rs)
   * [Managing state with memory systems](./05-state-with-memory-systems/src/main.rs)
+  * [Treating the prompt as an array](./05-prompt-as-array/src/main.rs)

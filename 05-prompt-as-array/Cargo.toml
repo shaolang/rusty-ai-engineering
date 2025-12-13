@@ -1,0 +1,9 @@
+[package]
+name    = 'prompt-as-array'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+async-openai = { workspace=true }
+tokio        = { workspace=true }
+utils        = { path='../utils' }

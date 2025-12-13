@@ -3,7 +3,7 @@ use async_openai::{
     config::OpenAIConfig,
     types::responses::{CreateResponse, CreateResponseArgs},
 };
-use utils::{Args, Green, OpenAIErrorExt, Red, cprintln, parse_args};
+use utils::{Args, Green, Red, cprintln, get_output_from_response, parse_args};
 
 #[tokio::main]
 async fn main() {
@@ -11,15 +11,10 @@ async fn main() {
     let client = create_client(&args);
     let req = create_response_req(&args, "Who was the first person to land on the moon?");
 
-    match client.responses().create(req).await {
-        Ok(resp) => cprintln(Green, &resp.output_text().unwrap_or("".to_string())),
-        Err(e) => {
-            if let Ok(text) = e.try_extract_output() {
-                cprintln(Green, &text);
-            } else {
-                cprintln(Red, &format!("Error occurred: {e:?}"));
-            }
-        }
+    let resp = client.responses().create(req).await;
+    match get_output_from_response(resp) {
+        Ok((text, _)) => cprintln(Green, &text),
+        Err(e) => cprintln(Red, &format!("Error occurred: {e:?}")),
     }
 }
 
