@@ -1,7 +1,7 @@
 use async_openai::Client;
 use async_openai::config::OpenAIConfig;
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
-use utils::{Args, Green, Red, cprintln, get_output_from_response, parse_args, read_stdin};
+use utils::{Args, Green, Red, cprintln, get_output_text, parse_args, read_stdin};
 
 #[tokio::main]
 async fn main() {
@@ -20,8 +20,8 @@ async fn main() {
         history = format!("{history}\nUser: {user_input}");
         let req = create_response_request(&args, &history);
         let resp = client.responses().create(req).await;
-        match get_output_from_response(resp) {
-            Ok((text, _)) => {
+        match get_output_text(resp) {
+            Ok(text) => {
                 cprintln(Green, &format!("Assistant: {text}"));
                 history = format!("{history}\nUser: {text}");
             }

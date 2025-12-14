@@ -24,14 +24,7 @@ pub fn cprintln(color: Color, text: &str) {
     cprint(color, &format!("{text}\n"));
 }
 
-pub fn get_output(response: Result<Response, OpenAIError>) -> Result<Response, OpenAIError> {
-    match response {
-        Ok(_) => response,
-        Err(e) => e.try_extract_response(),
-    }
-}
-
-pub fn get_output_from_response(
+pub fn get_output(
     response: Result<Response, OpenAIError>,
 ) -> Result<(String, Vec<OutputItem>), OpenAIError> {
     match response {
@@ -47,6 +40,10 @@ pub fn get_output_from_response(
             }
         },
     }
+}
+
+pub fn get_output_text(response: Result<Response, OpenAIError>) -> Result<String, OpenAIError> {
+    get_output(response).map(|(text, _)| text)
 }
 
 pub fn parse_args() -> Args {

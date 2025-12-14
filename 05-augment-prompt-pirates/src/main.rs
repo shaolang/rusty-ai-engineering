@@ -1,7 +1,7 @@
 use async_openai::Client;
 use async_openai::config::OpenAIConfig;
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
-use utils::{Args, Green, Red, cprintln, get_output_from_response, parse_args, read_stdin};
+use utils::{Args, Green, Red, cprintln, get_output_text, parse_args, read_stdin};
 
 #[tokio::main]
 async fn main() {
@@ -14,8 +14,8 @@ async fn main() {
     let client = create_client(&args);
     let req = create_response_request(&args, &input);
     let resp = client.responses().create(req).await;
-    match get_output_from_response(resp) {
-        Ok((text, _)) => cprintln(Green, &format!("Assistant: {text}")),
+    match get_output_text(resp) {
+        Ok(text) => cprintln(Green, &format!("Assistant: {text}")),
         Err(e) => cprintln(Red, &format!("An error occurred: {e:?}")),
     }
 }
