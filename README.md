@@ -3,8 +3,6 @@
 Rust implementations of the book [A Common Sense Guide to AI Engineering][book] published by
 Pragmatic Programmers.
 
-[book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
-
 All examples expect the `OPENAI_API_KEY` to be exported as an environment variable, e.g.,
 
 ```bash
@@ -28,3 +26,24 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
   * [Multi-turn dialogue](./05-multi-turn-dialogue/src/main.rs)
   * [Managing state with memory systems](./05-state-with-memory-systems/src/main.rs)
   * [Treating the prompt as an array](./05-prompt-as-array/src/main.rs)
+* Chapter 6: Augmenting a Prompt with Knowledge
+  * [Preparing the data](./06-prep-data/src/main.rs)
+
+### Wheel-equivalent (almost) Crates
+The following table shows the crates used in place of the wheels:
+
+| Wheel   | Crate                           | Remarks
+|---------|---------------------------------|---------------------------------------------------------------------
+| Docling | [Transmutation][transmutation]  | Augmented with [reqwest][reqwest] to retrieve resources from the web
+| openai  | [async-openai][async-openai]
+
+### Resources
+For convenince, all the files in `resources` directory are copied from the
+[book's source code][book]; the copyright of those files belong to the book's author and
+the publisher.
+
+
+[async-openai]: https://github.com/64bit/async-openai
+[book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
+[reqwest]: https://github.com/seanmonstar/reqwest
+[transmutation]: https://github.com/hivellm/transmutation
