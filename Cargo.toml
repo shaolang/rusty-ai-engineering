@@ -9,6 +9,7 @@ members  = [
   '05-developer-message',
   '05-prompt-as-array',
   '06-prep-data',
+  '06-knowledge-chatbot',
 ]
 resolver = '3'
 
