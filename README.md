@@ -28,6 +28,7 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
   * [Treating the prompt as an array](./05-prompt-as-array/src/main.rs)
 * Chapter 6: Augmenting a Prompt with Knowledge
   * [Preparing the data](./06-prep-data/src/main.rs)
+  * [Implementing the knowledge chatbot](./06-knowledge-chatbot/src/main.rs)
 
 ### Wheel-equivalent (almost) Crates
 The following table shows the crates used in place of the wheels:
@@ -38,7 +39,7 @@ The following table shows the crates used in place of the wheels:
 | openai  | [async-openai][async-openai]
 
 ### Resources
-For convenince, all the files in `resources` directory are copied from the
+For convenience, all the files in `resources` directory are copied from the
 [book's source code][book]; the copyright of those files belong to the book's author and
 the publisher.
 
