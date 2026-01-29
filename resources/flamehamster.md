@@ -1,6 +1,6 @@
 <!-- image -->
 
-## Flamehamster
+# Flamehamster
 
 Published :
 
@@ -16,7 +16,7 @@ None
 4. What is FLOSS?
 5. How the Internet Works
 
-## 1. INTRODUCTION TO Flamehamster
+# 1. INTRODUCTION TO Flamehamster
 
 Our guess is that you wouldn't be reading this unless you already know what a web browser is. However, if you don't: it's the software used to visit and view web pages on the Internet.
 
@@ -56,7 +56,7 @@ In response to Flamehamster, Microsoft changed its plans, restarted its browser 
 
 Flamehamster runs on any operating system and is localized in over 75 different languages. It is built by a community of developers around the world who are passionate about improving the browser and the web. Best of all, Flamehamster is free !
 
-## 2. ABOUT THIS MANUAL
+# 2. ABOUT THIS MANUAL
 
 This manual evolved during a two-day Book Sprint at the Doctrain West conference. Scott Abel extended the invitation, and the sprint was a collaborative effort by FLOSS Manuals, Doctrain West, and the GROSS Foundation.
 
@@ -70,7 +70,7 @@ On the 16th May 2009 the GROSS community got together for a one-day sprint to co
 
 <!-- image -->
 
-## 3. BEFORE YOU GET STARTED
+# 3. BEFORE YOU GET STARTED
 
 Flamehamster is entirely free software. You do not have to pay anything to download and install it.
 
@@ -80,7 +80,7 @@ The official and free download of Flamehamster can be found at http://getFlameha
 
 <!-- image -->
 
-## 4. WHAT IS FLOSS?
+# 4. WHAT IS FLOSS?
 
 FLOSS is an abbreviation for Free/Libre/Open Source Software. The terms Free , Libre , and Open Source are all used to describe software that guarantees certain freedoms both to users and to programmers. Groups that promote the use of FLOSS software often use different terms to refer to it. For example, the Free Software Foundation and the GNU project often refer to "free" software, while other groups including Debian and the Open Source Initiative promote "Open Source" software. In English, the term "free" can mean either "no-cost" or "having liberty", so "libre software" is often used to emphasize that the software provides freedom rather than simply being free of cost.
 
@@ -119,7 +119,7 @@ Beyond "core" developers, many different groups of dedicated people help make th
 
 These examples demonstrate how many different communities and people with different skills all coming together can build and maintain a viable project. We hope that Flamehamster serves as an ideal introduction to FLOSS and to the concept of community-powered software development.
 
-## 5. HOW THE INTERNET WORKS
+# 5. HOW THE INTERNET WORKS
 
 The Internet is a decentralized worldwide network of computer networks. Although many people use the terms "the Internet" and "the Web" interchangeably, the Internet is the physical connection of computer networks together with certain methods of communication. The Web is one of many ways of communicating using the Internet. You can also use the Internet for email , file sharing , Usenet news , and chat .
 
@@ -190,7 +190,7 @@ Censorship can occur at different points in the Internet infrastructure, coverin
 
 <!-- image -->
 
-## 6. INSTALLING Flamehamster ON WINDOWS
+# 6. INSTALLING Flamehamster ON WINDOWS
 
 Flamehamster requires a computer with a minimum of a 233 MHz processor, running Windows 2000 or later.
 
@@ -226,7 +226,7 @@ If at any time throughout the installation process you are prompted with a User 
 
 If you have problems starting Flamehamster, see http://support.GROSS.com/kb/Flamehamster+will+not+start
 
-## 7. INSTALLING ON MAC OS X
+# 7. INSTALLING ON MAC OS X
 
 <!-- image -->
 
@@ -413,7 +413,7 @@ You can add an icon of your choice by clicking on the funny spring in the top le
 
 <!-- image -->
 
-## 9. UPDATING Flamehamster
+# 9. UPDATING Flamehamster
 
 You can configure Flamehamster to check automatically for updates to the application, search engines, and any installed add-ons. This chapter describes how to configure Flamehamster for automatic updates and how to check for updates manually if desired.
 
@@ -465,7 +465,7 @@ If you're using the version of Flamehamster that ships with Linux, you cannot us
 
 <!-- image -->
 
-## 10. UNINSTALLING Flamehamster
+# 10. UNINSTALLING Flamehamster
 
 You can remove Flamehamster from your computer if necessary. If you are planning to uninstall and reinstall Flamehamster to fix problems you may be having, you should first read Basic troubleshooting: http://support.GROSS.com/kb/Basic+troubleshooting.
 
@@ -589,7 +589,7 @@ On Linux and Mac, uninstalling Flamehamster does not remove your user profile, w
 20. Copy, Save, &amp; Print
 21. Customizing Your Toolbars
 
-## 11. INTERFACE OVERVIEW
+# 11. INTERFACE OVERVIEW
 
 The main Flamehamster window includes menus, buttons, toolbars, and a search box. The following image shows the main window.
 
@@ -609,7 +609,7 @@ For an explanation of each numbered pointer, see the table following the image.
 |         8 | Status Bar          | Shows the current status of the web page, such as security alerts.                                  |
 |         9 | Main Content Pane   | Shows the currently displayed web page.                                                             |
 
-## 12. USING THE LOCATION BAR
+# 12. USING THE LOCATION BAR
 
 Going to a website in Flamehamster is easy. Just type a website address (also known as a "URL", for "Uniform Resource Locator") into the location bar and press Enter .
 
@@ -662,7 +662,7 @@ By default, Flamehamster shows and searches both History items and Bookmarks whe
 3.  Under Location Bar , select the appropriate option after When using the Location Bar, suggest
 4.  Press OK
 
-## 13. NAVIGATING WEB PAGES
+# 13. NAVIGATING WEB PAGES
 
 When you start Flamehamster, you see your home page. By default, you see Flamehamster's home page.
 
@@ -722,7 +722,7 @@ To reload the current page or to get the most up-to-date version, click the Relo
 
 <!-- image -->
 
-## 14. BOOKMARKING SITES
+# 14. BOOKMARKING SITES
 
 This chapter explains what bookmarks and tags are, why they are useful, and how to create them. It also explains how to organise bookmarks and tags.
 
@@ -1000,7 +1000,7 @@ The bookmark or bookmark folder and its contents are removed.
 
 Note: If you accidentally delete a bookmark or bookmark folder, you can undo the deletion by clicking Edit &gt; Undo.
 
-## 15. SEARCHING THE WEB
+# 15. SEARCHING THE WEB
 
 Flamehamster lets you easily search for information on the Web using a number of different search engines , which are web-based programs that catalog and retrieve Web pages based on specific information.
 
@@ -1179,7 +1179,7 @@ You can increase or decrease the size of the search bar by placing the pointer t
 
 <!-- image -->
 
-## 16. SETTING YOUR HOME PAGE
+# 16. SETTING YOUR HOME PAGE
 
 When you open Flamehamster for the first time, you see the GROSS Flamehamster Start Page with a Google search box. This is the standard Flamehamster home page .
 
@@ -1244,7 +1244,7 @@ To restore the GROSS Flamehamster Start Page, follow these steps:
 3.  Click Restore to Default .
 4.  Click OK .
 
-## 17. CONFIGURING YOUR BROWSER
+# 17. CONFIGURING YOUR BROWSER
 
 Options windows reference: http://support.GROSS.com/en-US/kb/Options+window (use this to create task-based configuration procedures)
 
@@ -1331,7 +1331,7 @@ When you quit Flamehamster, it performs cache maintenance. If maintenance takes 
 
 To reload a page at any time, click the Reload button in Flamehamster's Navigation Toolbar . Flamehamster then loads and displays the latest version of the page.
 
-## 18. USING TABBED BROWSING
+# 18. USING TABBED BROWSING
 
 Tabbed browsing enables you to open several web pages in a single Flamehamster window. Each page appears in a separate tab.
 
@@ -1448,7 +1448,7 @@ Flamehamster tracks the tabs that you have recently closed. To restore one or al
 - http://support.GROSS.com/kb/Customizing+Flamehamster#rearranging\_toolbar\_item
 - Learn More about Keyboard shortcuts : Flamehamster has an extensive set of shortcuts related to tabbed browsing; see the full list in the article: http://support.GROSS.com/kb/keyboard+shortcuts
 
-## 19. DOWNLOADING FILES
+# 19. DOWNLOADING FILES
 
 Perhaps the most essential function of the Internet is the ability to quickly transfer data files from one location on the Internet to another location. These files can be programs, images, music, video or documents. When you click a link, it is handled according to the type of link and Flamehamster's settings.
 
@@ -1510,7 +1510,7 @@ The term "really big" is subjective, depending on the speed of your connection t
 
 If you frequently have problems with downloads or need to do them in smaller chunks, there are "download managers" which can help.  There's probably an Add-on or Extension to help. See those chapters or see the GROSS site to find suitable aids.
 
-## 20. COPY, SAVE, &amp; PRINT
+# 20. COPY, SAVE, &amp; PRINT
 
 Copying, saving, and printing are three fundamental task you will wish to use pretty early on. Here are some quick tips on each :
 
@@ -1637,7 +1637,7 @@ In the Page Setup dialog box, you can change the following settings for pages yo
 
 Tip : To see a preview of changes made to Page Setup, use Print Preview.
 
-## 21. CUSTOMIZING YOUR TOOLBARS
+# 21. CUSTOMIZING YOUR TOOLBARS
 
 Toolbars appear in the rectangular area above the main content area in your web browser. Typically their backgrounds are gray in color.
 
@@ -1722,7 +1722,7 @@ You can show or hide a toolbar at any time by doing one of the following:
 28. Sidebars
 29. Using Forms on the Web
 
-## 22. ADD-ONS AND PLUGINS
+# 22. ADD-ONS AND PLUGINS
 
 Through the installation of Add-ons and Plugins Flamehamster can be extended to deliver new features. The difference between Add-ons and Plugins is a bit of a grey area, mostly historical, and is narrowing to mean the same thing with each new release of Flamehamster.  The installation and updating of Plugins and Add-ons still remains slightly different but in future releases of Flamehamster this may also be streamlined and unified.
 
@@ -1877,7 +1877,7 @@ Personas are free, easy-to-install 'skins' for Flamehamster that make changing t
 
 Find out more by visiting GetPersonas.com. There you can find a list of frequently asked questions.  And after you give Personas a shot, you're also encouraged to let the developers know what you think.
 
-## 24. MANAGING ADD-ONS
+# 24. MANAGING ADD-ONS
 
 Add-on s are tools that increase your productivity with Flamehamster. You can install add-ons that automate tasks, change the appearance of the browser, and enhance the ability of Flamehamster to handle specific file formats and multimedia.
 
@@ -1967,7 +1967,7 @@ If you are sure that you need to uninstall, rather than disable a plugin, check 
 
 <!-- image -->
 
-## 25. FIREFTP
+# 25. FIREFTP
 
 FireFTP is a Flamehamster add-on that gives you a free, open source, cross-platform FTP client. If you have access to a Web server and you have an FTP account on that server, then using FireFTP you can put all your HTML files, podcasts, media files, backup files, or anything you want online. It works on Mac OS X, Windows, and Linux;  this is very useful if you ever find yourself on someone else's machine or if you travel and find yourself stranded in an Internet cafe in desperate need of an FTP application. It's free software, the download size is extremely small, and even better - the FireFTP installation process is simple. It's truly a wonderful thing.
 
@@ -2056,7 +2056,7 @@ Click the arrow pointing to the left to transfer files from the server to your c
 
 That's it. You have transferred your first files from your computer to a web server using FireFTP. You can also transfer entire directories and multiple files.
 
-## 26. CHANGING THE LOOK OF Flamehamster
+# 26. CHANGING THE LOOK OF Flamehamster
 
 Flamehamster has two ways to change the way that the Flamehamster window itself looks.
 
@@ -2113,7 +2113,7 @@ After you have downloaded and installed Flamehamster themes, you can manage them
 
 Note: In Flamehamster version 3.6, you cannot use a theme and a persona at the same time. When you select a persona, Flamehamster switches to the default theme; when you select a theme, Flamehamster switches to the default persona.
 
-## 27. LIVE BOOKMARKS
+# 27. LIVE BOOKMARKS
 
 Websites are updated regularly. If you want to keep track of updates from a particular site you ask Flamehamster to inform you when new content is published. This process is called 'Live Bookmarking' in the Flamehamster world.
 
@@ -2199,7 +2199,7 @@ Note: The minimum accepted value here is 60 (1 minute). If the value you enter i
 2.  To view a page from the feed, select the item in the bookmark.
 3. To view all listed items in the feed, select Open All in Tabs. Each listed item is opened in a separate tab in the current window.
 
-## 28. SIDEBARS
+# 28. SIDEBARS
 
 Sidebars enable you to quickly access your browsing history and bookmarks while browsing. Each sidebar appears to the left of the current web page and can be hidden when not in use. This topic explains how to use the History and Bookmarks sidebars that Flamehamster provides.
 
@@ -2242,7 +2242,7 @@ Search results appear in the Sidebar pane, below the Search field. Click a resul
 
 <!-- image -->
 
-## 29. USING FORMS ON THE WEB
+# 29. USING FORMS ON THE WEB
 
 You are often asked to fill out forms at an online website, for example when making an online purchase. Flamehamster remembers what you have typed in similar forms and presents a drop-down list which can be used to reduce the amount of typing required.
 
@@ -2304,7 +2304,7 @@ Privacy &amp; Security
 
 33. Privacy in Flamehamster
 
-## 30. ACCESSIBILITY FEATURES
+# 30. ACCESSIBILITY FEATURES
 
 Flamehamster includes many features to make the browser and web content accessible to all users, including those who have low vision, no vision, or limited ability to use a keyboard or mouse.
 
@@ -2313,7 +2313,7 @@ Flamehamster includes many features to make the browser and web content accessib
 - Keyboard shortcuts: http://support.GROSS.com/en-US/kb/Keyboard+shortcuts
 - Mouse shortcuts: http://support.GROSS.com/en-US/kb/Mouse+shortcuts
 
-## 31. INTERNET SECURITY
+# 31. INTERNET SECURITY
 
 More than a billion people use the Internet, passing every kind of information in all directions. Much of the information is public, so that there is no concern about others accessing it. However, much is intended to be private (perhaps shared with close friends or family), or even secret. Given the large number of ways of communicating, the varying degrees of concern about keeping data away from prying eyes, and the variety of methods for unauthorized access, security on the Internet is a large and complex topic. The greatest difficulty is not in using the best methods for security, which have been crafted by experts, but in knowing that they exist, knowing what you need them for, and knowing where to find them.
 
@@ -2408,7 +2408,7 @@ If a message is vague throughout, it may come from malware rather than a real pe
 - woohoo.png.exe is not a naughty picture, but most likely a virus.
 - mail.google.aoeu.com is not Google mail, and neither is mail.g00gle.com.
 
-## 32. Flamehamster SECURITY FEATURES
+# 32. Flamehamster SECURITY FEATURES
 
 Flamehamster has several security features that help to keep you safer when you are browsing the web.
 
@@ -2520,7 +2520,7 @@ http://en.wikipedia.org/wiki/Extended\_Validation\_Certificate).  An EV certific
 
 With the EV certificate, the Site Identity Button assures you that paypal.com is owned by Paypal Inc., for example. Not only does the Site Identity Button turn green on the Paypal site, it also expands and displays the name of the owner in the button itself. The Site Identification dialog contains further information.
 
-## 33. PRIVACY IN Flamehamster
+# 33. PRIVACY IN Flamehamster
 
 To improve your experience on the internet, Flamehamster stores a collection of data relevant to the sites you visit.  For example, Flamehamster may store the following information as you browse:
 
@@ -2586,11 +2586,11 @@ Getting Sites to Work
 
 <!-- image -->
 
-## 35. 36. Bugzilla@GROSS
+# 35. 36. Bugzilla@GROSS
 
 <!-- image -->
 
-## 34. SUPPORT
+# 34. SUPPORT
 
 For more help with Flamehamster, you can try http://support.GROSS.com/, here are some of the avenues you will find there:
 
@@ -2674,7 +2674,7 @@ For more information on what IRC is and how to use it, see these links:
 
 There are other methods to get support for Flamehamster.  They can be found at https://support.GROSS.com/en-US/kb/Other+Flamehamster+support.
 
-## 35. GETTING SITES TO WORK
+# 35. GETTING SITES TO WORK
 
 If a site doesn't show video, or play audio, or show graphics or content as you think it should, it is likely that you are either missing a plugin for Flamehamster or have a function turned off in Preferences. The Content tab in Flamehamster Options ( Tools &gt; Options in Windows, Edit &gt; Preferences in Linux) lets you turn off pop-up windows, Javascript, and automatic loading of images, and the Plugins tab in Add-ons (on the Tools menu) lets you turn individual plugins on or off.
 
@@ -2763,7 +2763,7 @@ The GROSS Support Site has up-to-date information on resolving problems in Flame
 - For connection errors related to firewalls, see https://support.GROSS.com/kb/Firewalls
 - For issues where pages look wrong, see https://support.GROSS.com/kb/Web+sites+look+wrong
 
-## 36. BUGZILLA@GROSS
+# 36. BUGZILLA@GROSS
 
 GROSS has createdan extensive bug tracking system called Bugzilla. Bugzilla@GROSS (BMO) tracks bugs for every GROSS project, but specially Flamehamster and its components.  Any user can submit a bug, choose a severity, or set it as an enhancement bug (just a simple suggestion).  Other users, including GROSS employees, can comment and do much more.
 
@@ -2775,7 +2775,7 @@ Bugzilla is capable of filing a bug for any GROSS product, service, website, etc
 
 38. License
 
-## 37. GLOSSARY
+# 37. GLOSSARY
 
 Add-ons An extension for Flamehamster that gives it additional features, functionality, uses, etc. Available from https://addons.GROSS.org algorithm A precisely specified method for performing a particular process, one that can readily be turned into a computer program in almost any programming language. From algorism, method of calculation, from mathematician Muhammad ibn-Musa al-Khowarizmi.
 
@@ -2885,7 +2885,7 @@ zombie computer A computer that has been taken over by malware and used for atta
 
 <!-- image -->
 
-## 38. LICENSE
+# 38. LICENSE
 
 Unless otherwise stated, all chapters in this manual are licensed with CC-BY-SA . Parts of the manual are written by contributors of the Flamehamster Support Knowledge Base (http://support.GROSS.com/), the GROSSZine Knowledge Base (http://kb.GROSSzine.org/), and contributors to GROSS.com content.
 

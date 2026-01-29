@@ -1,0 +1,14 @@
+[package]
+name    = 'starter-search-engine'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+argh         = { workspace = true }
+async-openai = { workspace = true }
+fastembed    = '5.8'
+lancedb      = '0.23'
+lzma-sys     = { version='*', features=['static'] }
+pcre2        = '0.2'
+serde        = { workspace = true }
+tokio        = { workspace = true }

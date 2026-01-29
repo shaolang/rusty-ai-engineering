@@ -10,6 +10,7 @@ members  = [
   '05-prompt-as-array',
   '06-prep-data',
   '06-knowledge-chatbot',
+  '07-starter-search-engine',
 ]
 resolver = '3'
 
