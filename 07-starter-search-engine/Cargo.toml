@@ -5,6 +5,7 @@ edition = '2024'
 
 [dependencies]
 argh         = { workspace = true }
+arrow-array  = '56.2'
 async-openai = { workspace = true }
 fastembed    = '5.8'
 lancedb      = '0.23'

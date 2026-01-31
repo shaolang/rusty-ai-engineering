@@ -8006,6 +8006,7 @@ name = "starter-search-engine"
 version = "0.1.0"
 dependencies = [
  "argh",
+ "arrow-array",
  "async-openai",
  "fastembed",
  "lancedb",
