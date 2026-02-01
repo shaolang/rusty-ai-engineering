@@ -28,6 +28,8 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
 * Chapter 6: Augmenting a Prompt with Knowledge
   * [Preparing the data](./06-prep-data/src/main.rs)
   * [Implementing the knowledge chatbot](./06-knowledge-chatbot/src/main.rs)
+* Chapter 7: Efficiently Adding Knowledge with RAG
+  * [Implementing a RAG chatbot](./07-rag-chatbot/src/main.rs)
 
 ### Notable Differences
 Other than the language and the libraries used, this port:

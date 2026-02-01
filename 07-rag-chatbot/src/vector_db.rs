@@ -1,5 +1,5 @@
 use arrow_array::{RecordBatch, RecordBatchIterator};
-use lancedb::Connection;
+use lancedb::{Connection, Table};
 
 pub struct VectorDb {
     conn: Connection,
@@ -18,7 +18,7 @@ impl VectorDb {
         Self { conn }
     }
 
-    pub async fn create_table(&self, name: &str, data: impl IntoRecordBatches) {
+    pub async fn create_table(&self, name: &str, data: impl IntoRecordBatches) -> Table {
         let batches = data.into();
         let schema = batches.schema();
         let batch_iterator = RecordBatchIterator::new(vec![Ok(batches)], schema.clone());
@@ -31,6 +31,6 @@ impl VectorDb {
             .create_table(name, Box::new(batch_iterator))
             .execute()
             .await
-            .expect("created table in lancedb");
+            .expect("created table in lancedb")
     }
 }

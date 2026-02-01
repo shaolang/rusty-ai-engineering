@@ -1,11 +1,13 @@
-use std::{fs, sync::Arc};
+use std::sync::Arc;
 
-use arrow_array::builder::{Float32Builder, ListBuilder};
+use arrow_array::builder::{FixedSizeListBuilder, Float32Builder};
 use arrow_array::{ArrayRef, RecordBatch, StringArray};
-use fastembed::TextEmbedding;
+use fastembed::{InitOptions, TextEmbedding};
 use pcre2::bytes::RegexBuilder;
 
 use crate::IntoRecordBatches;
+
+const EMBEDDING_LENGTH: usize = 384;
 
 #[derive(Debug)]
 pub struct Chunk {
@@ -20,22 +22,8 @@ pub struct Document {
     chunks: Vec<Chunk>,
 }
 
-struct TextEmbedder {
+pub struct TextEmbedder {
     model: TextEmbedding,
-}
-
-pub fn chunk_markdown_text_by_h1_header(filename: &str, manual_name: &str) -> Document {
-    let md_text = fs::read_to_string(filename).expect("read markdown file");
-    let text_chunks = split_markdown_by_h1(md_text);
-
-    let mut embedder = TextEmbedder::new();
-    let chunks = text_chunks
-        .iter()
-        .enumerate()
-        .map(|(i, s)| embedder.create_record(i, s, manual_name))
-        .collect();
-
-    Document { chunks }
 }
 
 fn split_markdown_by_h1(md_text: impl AsRef<str>) -> Vec<String> {
@@ -56,7 +44,7 @@ impl IntoRecordBatches for Document {
         let texts =
             StringArray::from_iter_values(self.chunks.iter().map(|c| c.chunk_text.as_str()));
         let manuals = StringArray::from_iter_values(self.chunks.iter().map(|c| c.manual.as_str()));
-        let mut builder = ListBuilder::new(Float32Builder::new());
+        let mut builder = FixedSizeListBuilder::new(Float32Builder::new(), EMBEDDING_LENGTH as i32);
         self.chunks.iter().for_each(|chunk| {
             builder.values().append_slice(&chunk.vector);
             builder.append(true);
@@ -74,9 +62,26 @@ impl IntoRecordBatches for Document {
 }
 
 impl TextEmbedder {
-    fn new() -> Self {
-        let model = TextEmbedding::try_new(Default::default()).expect("text embedding created");
+    pub fn new() -> Self {
+        let init_options = InitOptions::new(fastembed::EmbeddingModel::BGESmallENV15)
+            .with_max_length(EMBEDDING_LENGTH);
+        let model = TextEmbedding::try_new(init_options).expect("text embedding created");
         Self { model }
+    }
+
+    pub fn chunk_markdown_text_by_h1_header(
+        &mut self,
+        text: impl AsRef<str>,
+        manual_name: &str,
+    ) -> Document {
+        let text_chunks = split_markdown_by_h1(text);
+        let chunks = text_chunks
+            .iter()
+            .enumerate()
+            .map(|(i, s)| self.create_record(i, s, manual_name))
+            .collect();
+
+        Document { chunks }
     }
 
     fn create_record(
@@ -85,17 +90,18 @@ impl TextEmbedder {
         text: impl AsRef<str>,
         manual: impl AsRef<str>,
     ) -> Chunk {
-        let vector = self
-            .model
-            .embed([text.as_ref()], None)
-            .map(|vv| vv[0].to_owned())
-            .expect("created embeddings");
-
         Chunk {
             chunk_id: format!("chunk-{id:05}"),
             chunk_text: text.as_ref().to_string(),
             manual: manual.as_ref().to_string(),
-            vector,
+            vector: self.to_embedding(text),
         }
+    }
+
+    pub fn to_embedding(&mut self, text: impl AsRef<str>) -> Vec<f32> {
+        self.model
+            .embed([text.as_ref()], None)
+            .map(|vv| vv[0].to_owned())
+            .expect("created embeddings")
     }
 }

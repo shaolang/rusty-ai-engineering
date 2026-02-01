@@ -1,5 +1,5 @@
 [package]
-name    = 'starter-search-engine'
+name    = 'rag-chatbot'
 version = '0.1.0'
 edition = '2024'
 
@@ -8,8 +8,10 @@ argh         = { workspace = true }
 arrow-array  = '56.2'
 async-openai = { workspace = true }
 fastembed    = '5.8'
+futures      = '0'
 lancedb      = '0.23'
 lzma-sys     = { version='*', features=['static'] }
 pcre2        = '0.2'
 serde        = { workspace = true }
 tokio        = { workspace = true }
+utils        = { path = '../utils' }
