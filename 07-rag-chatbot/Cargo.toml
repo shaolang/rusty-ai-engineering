@@ -5,13 +5,13 @@ edition = '2024'
 
 [dependencies]
 argh         = { workspace = true }
-arrow-array  = '56.2'
+arrow-array  = { workspace = true }
 async-openai = { workspace = true }
-fastembed    = '5.8'
-futures      = '0'
-lancedb      = '0.23'
-lzma-sys     = { version='*', features=['static'] }
-pcre2        = '0.2'
+fastembed    = { workspace = true }
+futures      = { workspace = true }
+lancedb      = { workspace = true }
+lzma-sys     = { workspace = true }
+pcre2        = { workspace = true }
 serde        = { workspace = true }
 tokio        = { workspace = true }
 utils        = { path = '../utils' }
