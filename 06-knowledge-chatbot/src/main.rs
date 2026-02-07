@@ -3,9 +3,7 @@ use async_openai::{
     config::OpenAIConfig,
     types::responses::{CreateResponse, CreateResponseArgs},
 };
-use utils::{
-    Args, Green, History, Red, cprintln, get_output, get_output_text, parse_args, read_stdin,
-};
+use utils::{Args, Green, History, Red, cprintln, get_output, parse_args, read_stdin};
 
 #[tokio::main]
 async fn main() {

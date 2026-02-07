@@ -94,7 +94,8 @@ async fn get_relevant_chunks(
 }
 
 fn combine_batches_to_string(batches: &[RecordBatch]) -> String {
-    batches.iter()
+    batches
+        .iter()
         .flat_map(|batch| {
             let column = batch
                 .column_by_name("chunk_text")

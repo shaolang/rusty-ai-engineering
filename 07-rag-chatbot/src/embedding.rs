@@ -32,10 +32,16 @@ fn split_markdown_by_h1(md_text: impl AsRef<str>) -> Vec<String> {
         .crlf(true)
         .build(r#"(?m)^# .+?(?=^# |\Z)"#)
         .expect("well-formed regex")
-        .find_iter(&md_text.as_ref().as_bytes())
+        .find_iter(md_text.as_ref().as_bytes())
         .filter_map(|m| m.map(|m| m.as_bytes()).ok())
         .map(|m| String::from_utf8_lossy(m).trim().to_string())
         .collect()
+}
+
+impl Default for TextEmbedder {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl IntoRecordBatches for Document {
