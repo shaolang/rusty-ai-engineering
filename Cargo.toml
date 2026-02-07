@@ -11,6 +11,8 @@ members  = [
   '06-prep-data',
   '06-knowledge-chatbot',
   '07-rag-chatbot',
+  'utils',
+  'vector-db',
 ]
 resolver = '3'
 
@@ -23,7 +25,9 @@ futures      = '0'
 lancedb      = '0.23'
 lzma-sys     = { version='*', features=['static'] }
 pcre2        = '0.2'
+marrow       = '0.2'
 serde        = '1'
+serde_arrow  = { version = '0.13', features=['arrow-56'] }  # arrow-56 'cos arrow-array
 serde_json   = '1'
 termcolor    = '1.4'
 tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread'] }
