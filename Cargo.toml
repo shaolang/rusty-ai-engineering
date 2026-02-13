@@ -13,6 +13,7 @@ members  = [
   '07-rag-chatbot',
   'utils',
   'vector-db',
+  'vector-db-macro',
 ]
 resolver = '3'
 
