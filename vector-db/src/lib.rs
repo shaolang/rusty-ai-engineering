@@ -1,14 +1,24 @@
+extern crate self as vector_db;
 use std::{collections::HashMap, error::Error, sync::Arc};
 
 use arrow_array::{RecordBatch, RecordBatchIterator};
+use fastembed::TextEmbedding;
 use lancedb::{Connection, arrow::arrow_schema::FieldRef};
 use marrow::datatypes::{DataType, Field};
 use serde::{Deserialize, Serialize};
 use serde_arrow::schema::{SchemaLike, TracingOptions};
+pub use vector_db_macro::VectorDbRecord;
 
 #[derive(Clone)]
 pub struct VectorDb {
     conn: Connection,
+}
+
+pub trait TryIntoRecordBatch: Iterator {
+    fn try_into_record_batch(
+        &mut self,
+        model: &mut TextEmbedding,
+    ) -> Result<RecordBatch, Box<dyn std::error::Error>>;
 }
 
 impl VectorDb {
@@ -55,7 +65,7 @@ where
     Ok(batch)
 }
 
-fn fixed_size_list_field(name: impl Into<String>, size: u16) -> Field {
+pub fn fixed_size_list_field(name: impl Into<String>, size: u16) -> Field {
     Field {
         name: name.into(),
         data_type: DataType::FixedSizeList(
