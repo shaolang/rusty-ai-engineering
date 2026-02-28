@@ -81,8 +81,8 @@ impl StructInfo {
                     }
                 }
 
-                fn tracing_options(&self) -> serde_arrow::schema::TracingOptions {
-                    serde_arrow::schema::TracingOptions::default()
+                fn tracing_options(&self) -> vector_db::serde_arrow::schema::TracingOptions {
+                    vector_db::serde_arrow::schema::TracingOptions::default()
                         #(#overrides_exprs)*
                 }
             }
