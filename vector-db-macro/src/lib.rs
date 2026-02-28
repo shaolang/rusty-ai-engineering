@@ -1,7 +1,10 @@
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::{format_ident, quote};
-use syn::{Data, DataStruct, DeriveInput, Fields, FieldsNamed, Ident, Type, parse_macro_input};
+use syn::{
+    Data, DataStruct, DeriveInput, Expr, ExprLit, Fields, FieldsNamed, Ident, Lit, Type,
+    parse_macro_input,
+};
 
 #[proc_macro_derive(VectorDbRecord, attributes(vector))]
 pub fn vector_db_record(item: TokenStream) -> TokenStream {
@@ -131,27 +134,55 @@ impl TryFrom<&DeriveInput> for StructInfo {
             .iter()
             .map(|f| (f.ident.clone().unwrap(), f.ty.clone()))
             .collect();
-        let vector_fields = named
+        let vector_fields: Vec<_> = named
             .iter()
-            .filter(|f| {
-                f.attrs
+            .filter_map(|f| {
+                let mut attrs = f.attrs
                     .iter()
                     .filter(|attr| &attr.meta.path().get_ident().unwrap().to_string() == "vector")
-                    .count()
-                    > 0
-            })
-            .map(|f| {
-                let name = f.ident.clone().unwrap();
-                let embed_name = format_ident!("{}_embedding", name);
-                (name, embed_name)
+                    .collect::<Vec<_>>();
+                let Some(attr) = attrs.pop() else { return None; };
+                let field_ident = f.ident.clone().unwrap();
+                attr.meta.require_name_value().map(|nv| {
+                    if let Expr::Lit(ExprLit {lit: Lit::Str(ref name), ..}) = nv.value {
+                        let name = name.clone().value();
+                        if name == field_ident.to_string() {
+                            Some(Err(syn::Error::new(
+                                    Span::call_site(),
+                                    format!("{} cannot use the same name for its embedded field variant", field_ident.to_string()))))
+                        } else {
+                            Some(Ok((field_ident.clone(), format_ident!("{}", format_ident!("{name}")))))
+                        }
+                    } else {
+                        Some(Err(syn::Error::new(
+                                Span::call_site(),
+                                format!("{} did not specify the embedded field name", field_ident.to_string()))))
+                    }
+                })
+                .unwrap_or_else(|_| {
+                    let err_msg = format!("expects a name for field `{}` in struct {}, e.g., #[vector=\"{}_embedding\"]",
+                        field_ident.to_string(), name.to_string(), field_ident.to_string());
+                    Some(Err(syn::Error::new(Span::call_site(), err_msg)))
+                 })
             })
             .collect();
-
-        Ok(Self {
-            name,
-            vectorized_name,
-            all_fields,
-            vector_fields,
-        })
+        if vector_fields.iter().any(|x| x.is_err()) {
+            let mut errors: Vec<_> = vector_fields
+                .into_iter()
+                .filter(|x| x.is_err())
+                .map(|x| x.unwrap_err())
+                .collect();
+            let mut err = errors.pop().unwrap();
+            errors.into_iter().for_each(|e| err.combine(e));
+            Err(err)
+        } else {
+            let vector_fields = vector_fields.into_iter().map(|x| x.unwrap()).collect();
+            Ok(Self {
+                name,
+                vectorized_name,
+                all_fields,
+                vector_fields,
+            })
+        }
     }
 }

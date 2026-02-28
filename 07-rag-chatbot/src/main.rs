@@ -45,10 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             break;
         }
         let search_results = get_relevant_chunks(&table, &mut model, &user_input, 3).await;
-        cprintln(Red, "gotten relevant chunks");
-        cprintln(Green, &format!("{search_results:?}"));
         let documentation = combine_batches_to_string(search_results.as_slice());
-        cprintln(Red, "gotten documentation");
         let user_input = format!(
             "Here are excerpts from the official Flamehamster web browser: {documentation}.
              Use whatever info from the above documentation excerpts (and no other info) to
@@ -73,7 +70,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[derive(VectorDbRecord)]
 struct Chunk {
     chunk_id: String,
-    #[vector]
+    #[vector = "manual_vector"]
     manual: String,
 }
 
@@ -108,7 +105,7 @@ async fn get_relevant_chunks(
         .limit(top_k)
         .refine_factor(5)
         .nprobes(10)
-        .column("manual_embedding")
+        .column("manual_vector")
         .execute()
         .await
         .expect("ran query against lancedb")

@@ -11,13 +11,6 @@ use serde::{Deserialize, Serialize};
 pub use serde_arrow; // ::schema::{SchemaLike, TracingOptions};
 pub use vector_db_macro::VectorDbRecord;
 
-#[derive(VectorDbRecord)]
-pub struct Chunk {
-    id: String,
-    #[vector]
-    text: String,
-}
-
 #[derive(Clone)]
 pub struct VectorDb {
     conn: Connection,
