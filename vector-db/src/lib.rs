@@ -1,42 +1,60 @@
 extern crate self as vector_db;
-use std::{collections::HashMap, error::Error, sync::Arc};
+use std::collections::HashMap;
+use std::error::Error;
+use std::sync::{Arc, Mutex};
 
-use arrow_array::{RecordBatch, RecordBatchIterator};
-use fastembed::TextEmbedding;
+use arrow_array::RecordBatchIterator;
+use fastembed::{EmbeddingModel, InitOptionsWithLength, TextEmbedding};
 use lancedb::{Connection, arrow::arrow_schema::FieldRef};
 use marrow::datatypes::{DataType, Field};
 use serde::{Deserialize, Serialize};
 use serde_arrow::schema::{SchemaLike, TracingOptions};
 pub use vector_db_macro::VectorDbRecord;
 
+#[derive(VectorDbRecord)]
+pub struct Chunk {
+    id: String,
+    #[vector]
+    text: String,
+}
+
 #[derive(Clone)]
 pub struct VectorDb {
     conn: Connection,
+    model: Arc<Mutex<TextEmbedding>>,
 }
 
-pub trait TryIntoRecordBatch: Iterator {
-    fn try_into_record_batch(
-        &mut self,
-        model: &mut TextEmbedding,
-    ) -> Result<RecordBatch, Box<dyn std::error::Error>>;
+pub trait Embeddable {
+    type Item;
+
+    fn embed(&self, model: &mut TextEmbedding) -> Self::Item;
+
+    fn tracing_options(&self) -> TracingOptions;
 }
 
 impl VectorDb {
     pub async fn try_new(path: &str) -> Result<Self, Box<dyn Error>> {
         let conn = lancedb::connect(path).execute().await?;
-        Ok(Self { conn })
+        let options = InitOptionsWithLength::new(EmbeddingModel::BGESmallZHV15);
+        let model = Arc::new(Mutex::new(TextEmbedding::try_new(options).unwrap()));
+        Ok(Self { conn, model })
     }
 
-    pub async fn create_table_with_data<'de, T>(
-        &self,
+    pub async fn create_table_with_data<T>(
+        &mut self,
         name: &str,
-        data: &[T],
-        embedding_fields: &[(&str, u16)],
+        data: Vec<impl Embeddable<Item = T>>,
     ) -> Result<(), Box<dyn Error>>
     where
-        T: Deserialize<'de> + Serialize,
+        T: Serialize + for<'de> Deserialize<'de>,
     {
-        let batch = to_record_batch(data, embedding_fields)?;
+        let mut model = self.model.lock().expect("model exclusive lock obtained");
+        let xs: Vec<T> = data.iter().map(|d| d.embed(&mut model)).collect();
+        let Some(opts) = data.iter().peekable().peek().map(|e| e.tracing_options()) else {
+            return Ok(());
+        };
+        let fields = Vec::<FieldRef>::from_type::<T>(opts)?;
+        let batch = serde_arrow::to_record_batch(&fields, &xs)?;
         let schema = batch.schema();
         let batches = RecordBatchIterator::new(vec![batch].into_iter().map(Ok), schema.clone());
         self.conn.create_table(name, batches).execute().await?;
@@ -44,28 +62,7 @@ impl VectorDb {
     }
 }
 
-fn to_record_batch<'de, T>(
-    data: &[T],
-    embedding_fields: &[(&str, u16)],
-) -> Result<RecordBatch, Box<dyn Error>>
-where
-    T: Deserialize<'de> + Serialize,
-{
-    let mut topts = TracingOptions::default();
-
-    for (name, size) in embedding_fields {
-        let field = fixed_size_list_field(*name, *size);
-        topts = topts
-            .overwrite(*name, Arc::new(field))
-            .expect("embedding field created");
-    }
-
-    let fields = Vec::<FieldRef>::from_type::<T>(topts)?;
-    let batch = serde_arrow::to_record_batch(&fields, &data)?;
-    Ok(batch)
-}
-
-pub fn fixed_size_list_field(name: impl Into<String>, size: u16) -> Field {
+fn fixed_size_list_field(name: impl Into<String>, size: u16) -> Field {
     Field {
         name: name.into(),
         data_type: DataType::FixedSizeList(

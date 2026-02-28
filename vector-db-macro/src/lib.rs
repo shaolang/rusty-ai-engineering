@@ -18,7 +18,6 @@ pub fn vector_db_record(item: TokenStream) -> TokenStream {
     quote! {
         const _: () = {
             #new_struct
-
             #impls
         };
     }
@@ -40,7 +39,7 @@ impl StructInfo {
 
         quote! {
             #[derive(serde::Deserialize, serde::Serialize)]
-            struct #name {
+            pub struct #name {
                 #fields
                 #vector_fields
             }
@@ -53,12 +52,12 @@ impl StructInfo {
         let field_exprs = self
             .all_fields
             .iter()
-            .map(|(name, _)| quote! { #name: rec.#name.clone() });
+            .map(|(name, _)| quote! { #name: self.#name.clone() });
         let vector_field_exprs = self.vector_fields
             .iter()
             .map(|(name, embed_name)| {
                 let msg = format!("created embeddings for {}", name);
-                quote! { #embed_name: model.embed([&rec.#name], None).map(|vv| vv[0].to_owned()).expect(#msg) }
+                quote! { #embed_name: model.embed([&self.#name], None).map(|vv| vv[0].to_owned()).expect(#msg) }
             });
         let overrides_exprs = self.vector_fields
             .iter()
@@ -72,22 +71,21 @@ impl StructInfo {
             });
 
         quote! {
-            impl vector_db::TryIntoRecordBatch for dyn Iterator<Item=#name> {
-                fn try_into_record_batch(&mut self, model: &mut fastembed::TextEmbedding) -> Result<RecordBatch, Box<dyn std::error::Error>> {
-                    let data: Vec<#vectorized_name> = self.map(|rec: #name| {
-                        #vectorized_name {
-                            #(#field_exprs,)*
-                            #(#vector_field_exprs,)*
-                        }
-                    }).collect();
-                    let topts = serde_arrow::schema::TracingOptions::default()
-                        #(#overrides_exprs)*;
-                    let fields = Vec::<lancedb::arrow::arrow_schema::FieldRef>::from_type::<#vectorized_name>(topts)?;
-                    let batch = serde_arrow::to_record_batch(&fields, &data)?;
-                    Ok(batch)
+            impl vector_db::Embeddable for #name {
+                type Item = #vectorized_name;
+
+                fn embed(&self, model: &mut fastembed::TextEmbedding) -> Self::Item {
+                    #vectorized_name {
+                        #(#field_exprs,)*
+                        #(#vector_field_exprs,)*
+                    }
+                }
+
+                fn tracing_options(&self) -> serde_arrow::schema::TracingOptions {
+                    serde_arrow::schema::TracingOptions::default()
+                        #(#overrides_exprs)*
                 }
             }
-
         }
     }
 
