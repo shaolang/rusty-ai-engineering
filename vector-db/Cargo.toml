@@ -12,4 +12,5 @@ lzma-sys        = { workspace = true }
 marrow          = { workspace = true }
 serde           = { workspace = true }
 serde_arrow     = { workspace = true }
+tokio           = { workspace = true }
 vector-db-macro = { path = '../vector-db-macro' }

@@ -9227,6 +9227,7 @@ dependencies = [
  "marrow",
  "serde",
  "serde_arrow",
+ "tokio",
  "vector-db-macro",
 ]
 

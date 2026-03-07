@@ -141,27 +141,27 @@ impl TryFrom<&DeriveInput> for StructInfo {
                     .iter()
                     .filter(|attr| &attr.meta.path().get_ident().unwrap().to_string() == "vector")
                     .collect::<Vec<_>>();
-                let Some(attr) = attrs.pop() else { return None; };
+                let attr = attrs.pop()?;
                 let field_ident = f.ident.clone().unwrap();
                 attr.meta.require_name_value().map(|nv| {
                     if let Expr::Lit(ExprLit {lit: Lit::Str(ref name), ..}) = nv.value {
                         let name = name.clone().value();
-                        if name == field_ident.to_string() {
+                        if field_ident == name {
                             Some(Err(syn::Error::new(
                                     Span::call_site(),
-                                    format!("{} cannot use the same name for its embedded field variant", field_ident.to_string()))))
+                                    format!("{} cannot use the same name for its embedded field variant", field_ident))))
                         } else {
                             Some(Ok((field_ident.clone(), format_ident!("{}", format_ident!("{name}")))))
                         }
                     } else {
                         Some(Err(syn::Error::new(
                                 Span::call_site(),
-                                format!("{} did not specify the embedded field name", field_ident.to_string()))))
+                                format!("{} did not specify the embedded field name", field_ident))))
                     }
                 })
                 .unwrap_or_else(|_| {
                     let err_msg = format!("expects a name for field `{}` in struct {}, e.g., #[vector=\"{}_embedding\"]",
-                        field_ident.to_string(), name.to_string(), field_ident.to_string());
+                        field_ident, name, field_ident);
                     Some(Err(syn::Error::new(Span::call_site(), err_msg)))
                  })
             })

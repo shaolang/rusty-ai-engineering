@@ -40,7 +40,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if &user_input == "quit" {
             break;
         }
-        let search_results = table.get_relevant_records(&user_input, "manual_vector", 3).await;
+        let search_results = table
+            .get_relevant_records(&user_input, "manual_vector", 3)
+            .await;
         let documentation = combine_batches_to_string(search_results.as_slice());
         let user_input = format!(
             "Here are excerpts from the official Flamehamster web browser: {documentation}.

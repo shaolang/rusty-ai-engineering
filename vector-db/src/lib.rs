@@ -1,16 +1,17 @@
 extern crate self as vector_db;
 use std::error::Error;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 use arrow_array::{RecordBatch, RecordBatchIterator};
 use fastembed::{EmbeddingModel, InitOptionsWithLength, TextEmbedding};
 use futures::TryStreamExt;
 use lancedb::Table;
-use lancedb::{Connection, arrow::arrow_schema::FieldRef};
 use lancedb::query::{ExecutableQuery, QueryBase};
+use lancedb::{Connection, arrow::arrow_schema::FieldRef};
 use marrow::datatypes::{DataType, Field};
 use serde::{Deserialize, Serialize};
 pub use serde_arrow;
+use tokio::sync::Mutex;
 pub use vector_db_macro::VectorDbRecord;
 
 #[derive(Clone)]
@@ -51,7 +52,7 @@ impl VectorDb {
     {
         use serde_arrow::schema::SchemaLike;
 
-        let mut model = self.model.lock().expect("model exclusive lock obtained");
+        let mut model = self.model.lock().await;
         let xs: Vec<T> = data.iter().map(|d| d.embed(&mut model)).collect();
         let Some(opts) = data.iter().peekable().peek().map(|e| e.tracing_options()) else {
             return Ok(());
@@ -70,15 +71,24 @@ impl VectorDb {
 
     pub async fn open(&self, table_name: impl Into<String>) -> Result<VectorTable, Box<dyn Error>> {
         let table = self.conn.open_table(table_name).execute().await?;
-        Ok(VectorTable { model: self.model.clone(), table})
+        Ok(VectorTable {
+            model: self.model.clone(),
+            table,
+        })
     }
 }
 
 impl VectorTable {
-    pub async fn get_relevant_records(&self, query: impl AsRef<str>, target_column: impl AsRef<str>, top_k: usize) -> Vec<RecordBatch> {
-        let embedded_query = self.model
+    pub async fn get_relevant_records(
+        &self,
+        query: impl AsRef<str>,
+        target_column: impl AsRef<str>,
+        top_k: usize,
+    ) -> Vec<RecordBatch> {
+        let embedded_query = self
+            .model
             .lock()
-            .expect("text embedded exclusive access obtained")
+            .await
             .embed([query.as_ref()], None)
             .map(|v| v[0].to_owned())
             .expect("query embedding created");
