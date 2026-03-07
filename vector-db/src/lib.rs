@@ -2,19 +2,26 @@ extern crate self as vector_db;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 
-use arrow_array::RecordBatchIterator;
+use arrow_array::{RecordBatch, RecordBatchIterator};
 use fastembed::{EmbeddingModel, InitOptionsWithLength, TextEmbedding};
+use futures::TryStreamExt;
 use lancedb::Table;
 use lancedb::{Connection, arrow::arrow_schema::FieldRef};
+use lancedb::query::{ExecutableQuery, QueryBase};
 use marrow::datatypes::{DataType, Field};
 use serde::{Deserialize, Serialize};
-pub use serde_arrow; // ::schema::{SchemaLike, TracingOptions};
+pub use serde_arrow;
 pub use vector_db_macro::VectorDbRecord;
 
 #[derive(Clone)]
 pub struct VectorDb {
     conn: Connection,
     pub model: Arc<Mutex<TextEmbedding>>,
+}
+
+pub struct VectorTable {
+    model: Arc<Mutex<TextEmbedding>>,
+    table: Table,
 }
 
 pub trait Embeddable {
@@ -61,9 +68,34 @@ impl VectorDb {
         Ok(())
     }
 
-    pub async fn open(&self, table_name: impl Into<String>) -> Result<Table, Box<dyn Error>> {
+    pub async fn open(&self, table_name: impl Into<String>) -> Result<VectorTable, Box<dyn Error>> {
         let table = self.conn.open_table(table_name).execute().await?;
-        Ok(table)
+        Ok(VectorTable { model: self.model.clone(), table})
+    }
+}
+
+impl VectorTable {
+    pub async fn get_relevant_records(&self, query: impl AsRef<str>, target_column: impl AsRef<str>, top_k: usize) -> Vec<RecordBatch> {
+        let embedded_query = self.model
+            .lock()
+            .expect("text embedded exclusive access obtained")
+            .embed([query.as_ref()], None)
+            .map(|v| v[0].to_owned())
+            .expect("query embedding created");
+        self.table
+            .query()
+            .nearest_to(embedded_query.as_slice())
+            .expect("embedded query created")
+            .limit(top_k)
+            .refine_factor(5)
+            .nprobes(10)
+            .column(target_column.as_ref())
+            .execute()
+            .await
+            .expect("ran query against vector db")
+            .try_collect()
+            .await
+            .unwrap()
     }
 }
 

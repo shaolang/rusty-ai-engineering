@@ -2917,6 +2917,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "eval-chatbot"
+version = "0.1.0"
+dependencies = [
+ "argh",
+ "arrow-array",
+ "async-openai",
+ "fastembed",
+ "futures",
+ "lancedb",
+ "lzma-sys",
+ "pcre2",
+ "serde",
+ "tokio",
+ "utils",
+ "vector-db",
+]
+
+[[package]]
 name = "event-listener"
 version = "5.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -9203,6 +9221,7 @@ version = "0.1.0"
 dependencies = [
  "arrow-array",
  "fastembed",
+ "futures",
  "lancedb",
  "lzma-sys",
  "marrow",

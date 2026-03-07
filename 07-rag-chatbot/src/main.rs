@@ -4,9 +4,6 @@ use arrow_array::cast::as_largestring_array;
 use arrow_array::{Array, RecordBatch};
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
 use async_openai::{Client, config::OpenAIConfig};
-use futures::TryStreamExt;
-use lancedb::Table;
-use lancedb::query::{ExecutableQuery, QueryBase};
 use pcre2::bytes::RegexBuilder;
 use utils::{Args, Green, History, Red, cprintln, get_output, parse_args, read_stdin};
 use vector_db::{VectorDb, VectorDbRecord};
@@ -28,7 +25,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await
         .expect("lance table created");
     let table = db.open("flamehamster").await.expect("table exists");
-    let mut model = db.model.lock().expect("embedding model held");
 
     let client = create_client(&args);
     let history = History::new();
@@ -44,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if &user_input == "quit" {
             break;
         }
-        let search_results = get_relevant_chunks(&table, &mut model, &user_input, 3).await;
+        let search_results = table.get_relevant_records(&user_input, "manual_vector", 3).await;
         let documentation = combine_batches_to_string(search_results.as_slice());
         let user_input = format!(
             "Here are excerpts from the official Flamehamster web browser: {documentation}.
@@ -86,32 +82,6 @@ fn create_response_request(args: &Args, history: &History) -> CreateResponse {
         .temperature(args.temperature)
         .build()
         .expect("create response request succeeds")
-}
-
-async fn get_relevant_chunks(
-    table: &Table,
-    model: &mut fastembed::TextEmbedding,
-    query: impl AsRef<str>,
-    top_k: usize,
-) -> Vec<RecordBatch> {
-    let query_vector = model
-        .embed([query.as_ref()], None)
-        .map(|vv| vv[0].to_owned())
-        .expect("embedding created");
-    table
-        .query()
-        .nearest_to(query_vector.as_slice())
-        .expect("created lancedb query")
-        .limit(top_k)
-        .refine_factor(5)
-        .nprobes(10)
-        .column("manual_vector")
-        .execute()
-        .await
-        .expect("ran query against lancedb")
-        .try_collect()
-        .await
-        .unwrap()
 }
 
 fn combine_batches_to_string(batches: &[RecordBatch]) -> String {
