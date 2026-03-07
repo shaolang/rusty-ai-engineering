@@ -26,7 +26,7 @@ pub struct VectorTable {
 }
 
 pub trait Embeddable {
-    type Item;
+    type Item: Serialize + for<'de> Deserialize<'de>;
 
     fn embed(&self, model: &mut TextEmbedding) -> Self::Item;
 
