@@ -30,7 +30,7 @@ pub fn vector_db_record(item: TokenStream) -> TokenStream {
 struct StructInfo {
     name: Ident,
     vectorized_name: Ident,
-    all_fields: Vec<(Ident, Type)>,
+    all_fields: Vec<(Ident, Type)>,     // excluding vector-ones
     vector_fields: Vec<(Ident, Ident)>, // (original field, new_embedding_field)
 }
 
@@ -73,6 +73,21 @@ impl StructInfo {
                 }
             });
 
+        let array_exprs = self.all_fields
+            .iter()
+            .map(|(field, _ty)| {
+                let field_str = field.to_string();
+                let msg = format!("{field} col to exist in vector database");
+                quote! {
+                    let #field = arrow_array::cast::as_largestring_array(batch.column_by_name(#field_str).expect(#msg));
+                }
+            });
+        let array_assignments = self.all_fields.iter().map(|(field, _ty)| {
+            quote! {
+                #field: #field.value(i).to_owned()
+            }
+        });
+
         quote! {
             impl vector_db::Embeddable for #name {
                 type Item = #vectorized_name;
@@ -87,6 +102,21 @@ impl StructInfo {
                 fn tracing_options(&self) -> vector_db::serde_arrow::schema::TracingOptions {
                     vector_db::serde_arrow::schema::TracingOptions::default()
                         #(#overrides_exprs)*
+                }
+            }
+
+            impl #name {
+                pub fn from_record_batches(batches: Vec<RecordBatch>) -> Vec<#name> {
+                    batches.iter()
+                        .flat_map(|batch| {
+                            #(#array_exprs)*
+                            (0..batch.num_rows()).map(|i| {
+                                #name {
+                                    #(#array_assignments,)*
+                                }
+                            })
+                        })
+                    .collect()
                 }
             }
         }

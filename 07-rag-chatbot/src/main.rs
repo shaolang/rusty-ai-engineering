@@ -1,7 +1,6 @@
 use std::fs;
 
-use arrow_array::cast::as_largestring_array;
-use arrow_array::{Array, RecordBatch};
+use arrow_array::RecordBatch;
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
 use async_openai::{Client, config::OpenAIConfig};
 use pcre2::bytes::RegexBuilder;
@@ -43,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let search_results = table
             .get_relevant_records(&user_input, "manual_vector", 3)
             .await;
-        let documentation = combine_batches_to_string(search_results.as_slice());
+        let documentation = combine_batches_to_string(search_results);
         let user_input = format!(
             "Here are excerpts from the official Flamehamster web browser: {documentation}.
              Use whatever info from the above documentation excerpts (and no other info) to
@@ -86,19 +85,11 @@ fn create_response_request(args: &Args, history: &History) -> CreateResponse {
         .expect("create response request succeeds")
 }
 
-fn combine_batches_to_string(batches: &[RecordBatch]) -> String {
-    batches
+fn combine_batches_to_string(batches: Vec<RecordBatch>) -> String {
+    Chunk::from_record_batches(batches)
         .iter()
-        .flat_map(|batch| {
-            let column = batch
-                .column_by_name("manual")
-                .expect("retrieved manual from lancedb query result");
-            let string_array = as_largestring_array(column);
-            (0..string_array.len())
-                .map(|i| string_array.value(i))
-                .collect::<Vec<&str>>()
-        })
-        .collect::<Vec<&str>>()
+        .map(|chunk| chunk.manual.clone())
+        .collect::<Vec<String>>()
         .join("\n")
 }
 
