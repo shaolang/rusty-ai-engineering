@@ -106,7 +106,7 @@ impl StructInfo {
             }
 
             impl #name {
-                pub fn from_record_batches(batches: Vec<RecordBatch>) -> Vec<#name> {
+                pub fn from_record_batches(batches: Vec<arrow_array::RecordBatch>) -> Vec<#name> {
                     batches.iter()
                         .flat_map(|batch| {
                             #(#array_exprs)*
