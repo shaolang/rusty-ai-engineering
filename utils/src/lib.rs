@@ -3,9 +3,12 @@ use std::{cell::RefCell, io::Write};
 use argh::FromArgs;
 use async_openai::error::OpenAIError;
 use async_openai::types::responses::{
-    InputItem, InputMessage, InputParam, InputRole, Item, MessageItem, OutputItem, Response,
+    InputContent, InputItem, InputMessage, InputParam, InputRole, InputTextContent, Item,
+    MessageItem, OutputContent, OutputItem, OutputMessage, OutputMessageContent, OutputTextContent,
+    Response,
 };
-use serde::Deserialize;
+use serde::ser::SerializeSeq;
+use serde::{Deserialize, Serialize};
 pub use termcolor::Color::{Cyan, Green, Red};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
@@ -18,6 +21,7 @@ pub fn cprint(color: Color, text: &str) {
     write!(&mut stdout, "{text}").expect("write w/ color to stdout succeeds");
     color_spec.clear();
     stdout.set_color(&color_spec).expect("reset color succeeds");
+    stdout.flush().unwrap();
 }
 
 pub fn cprintln(color: Color, text: &str) {
@@ -139,9 +143,15 @@ struct Content {
     text: String,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct History {
     items: RefCell<Vec<InputItem>>,
+}
+
+#[derive(Serialize)]
+struct HistoryItem {
+    role: String,
+    content: String,
 }
 
 impl From<ContentOnly> for Response {
@@ -236,9 +246,8 @@ impl History {
                 }
             })
             .collect();
-        let mut history = self.items.take();
+        let mut history = self.items.borrow_mut();
         history.append(&mut items);
-        self.items.replace(history);
     }
 
     fn add_input(&self, role: InputRole, text: &str) {
@@ -256,5 +265,72 @@ impl History {
     pub fn as_input_params(&self) -> InputParam {
         let items = self.items.borrow().clone();
         InputParam::Items(items)
+    }
+
+    pub fn clear(&self) {
+        let mut items = self.items.borrow_mut();
+        items.clear();
+    }
+}
+
+impl Serialize for History {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut seq = serializer.serialize_seq(Some(self.items.borrow().len()))?;
+        for e in self.items.borrow().iter() {
+            let e: Result<HistoryItem, _> = e.try_into();
+            if let Ok(e) = e {
+                seq.serialize_element(&e)?;
+            }
+        }
+
+        serde::ser::SerializeSeq::end(seq)
+    }
+}
+
+impl TryFrom<&InputItem> for HistoryItem {
+    type Error = ();
+
+    fn try_from(item: &InputItem) -> Result<Self, Self::Error> {
+        match item {
+            InputItem::Item(Item::Message(MessageItem::Input(InputMessage {
+                content,
+                role,
+                ..
+            }))) => {
+                if let InputContent::InputText(InputTextContent { text }) = content.first().unwrap()
+                {
+                    let role = match role {
+                        InputRole::User => "user",
+                        InputRole::Developer => "developer",
+                        InputRole::System => "system",
+                    }
+                    .to_string();
+                    Ok(HistoryItem {
+                        role,
+                        content: text.to_string(),
+                    })
+                } else {
+                    Err(())
+                }
+            }
+            InputItem::Item(Item::Message(MessageItem::Output(OutputMessage {
+                content, ..
+            }))) => {
+                if let OutputMessageContent::OutputText(OutputTextContent { text, .. }) =
+                    content.first().unwrap()
+                {
+                    Ok(HistoryItem {
+                        role: "assistant".to_string(),
+                        content: text.to_string(),
+                    })
+                } else {
+                    Err(())
+                }
+            }
+            _ => Err(()),
+        }
     }
 }

@@ -1,6 +1,6 @@
 use arrow_array::RecordBatch;
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
-use utils::{Green, Red, cprintln, get_output, read_stdin};
+use utils::get_output;
 use vector_db::{VectorDb, VectorDbRecord, VectorTable};
 
 pub fn start_open_ai_client() -> OpenAI {
@@ -39,6 +39,7 @@ pub struct OpenAI {
     client: async_openai::Client<async_openai::config::OpenAIConfig>,
     pub history: utils::History,
     model: String,
+    system_input: String,
     temperature: f32,
 }
 
@@ -61,8 +62,14 @@ impl OpenAI {
             client: async_openai::Client::with_config(config),
             history,
             model: args.model,
+            system_input: system_input.to_string(),
             temperature: args.temperature,
         }
+    }
+
+    pub fn reset(&self) {
+        self.history.clear();
+        self.history.add_system_input(&self.system_input);
     }
 
     pub async fn send(&self, user_input: impl AsRef<str>) -> String {
@@ -73,7 +80,6 @@ impl OpenAI {
         match get_output(response) {
             Ok((text, output_items)) => {
                 self.history.add_assistant_outputs(&output_items);
-                println!("{:#?}", self.history);
                 text
             }
             Err(err) => format!("An error occurred: {err:?}"),
