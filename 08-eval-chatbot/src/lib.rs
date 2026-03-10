@@ -118,7 +118,7 @@ pub fn extract_chunk_texts(chunks: Vec<RecordBatch>) -> String {
 }
 
 fn create_chunks_from(manual: &str) -> Vec<Chunk> {
-    let text = std::fs::read_to_string(&format!("resources/{manual}.md")).expect("md file read");
+    let text = std::fs::read_to_string(format!("resources/{manual}.md")).expect("md file read");
     split_markdown_by_h1(&text)
         .iter()
         .enumerate()

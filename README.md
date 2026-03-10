@@ -30,6 +30,9 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
   * [Implementing the knowledge chatbot](./06-knowledge-chatbot/src/main.rs)
 * Chapter 7: Efficiently Adding Knowledge with RAG
   * [Implementing a RAG chatbot](./07-rag-chatbot/src/main.rs)
+* Chapter 8: Measuring Quality with Evals
+  * [Setting Up Our App](./08-eval-chatbot/src/main.rs)
+  * [Generating Traces](./08-generating-traces/src/main.rs)
 
 ### Notable Differences
 Other than the language and the libraries used, this port:

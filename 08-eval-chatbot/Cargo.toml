@@ -7,7 +7,6 @@ edition = '2024'
 argh         = { workspace = true }
 arrow-array  = { workspace = true }
 async-openai = { workspace = true }
-csv          = { workspace = true }
 fastembed    = { workspace = true }
 futures      = { workspace = true }
 lancedb      = { workspace = true }
@@ -18,6 +17,3 @@ serde_json   = { workspace = true }
 tokio        = { workspace = true }
 utils        = { path = '../utils' }
 vector-db    = { path = '../vector-db' }
-
-[[bin]]
-name = 'trace-generator'

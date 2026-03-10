@@ -4,7 +4,7 @@ use argh::FromArgs;
 use async_openai::error::OpenAIError;
 use async_openai::types::responses::{
     InputContent, InputItem, InputMessage, InputParam, InputRole, InputTextContent, Item,
-    MessageItem, OutputContent, OutputItem, OutputMessage, OutputMessageContent, OutputTextContent,
+    MessageItem, OutputItem, OutputMessage, OutputMessageContent, OutputTextContent,
     Response,
 };
 use serde::ser::SerializeSeq;

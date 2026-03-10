@@ -2923,7 +2923,6 @@ dependencies = [
  "argh",
  "arrow-array",
  "async-openai",
- "csv",
  "fastembed",
  "futures",
  "lancedb",
@@ -3309,6 +3308,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
 dependencies = [
  "byteorder",
+]
+
+[[package]]
+name = "generating-traces"
+version = "0.1.0"
+dependencies = [
+ "csv",
+ "eval-chatbot",
+ "serde",
+ "serde_json",
+ "tokio",
+ "utils",
 ]
 
 [[package]]
