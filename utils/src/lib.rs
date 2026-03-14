@@ -4,8 +4,7 @@ use argh::FromArgs;
 use async_openai::error::OpenAIError;
 use async_openai::types::responses::{
     InputContent, InputItem, InputMessage, InputParam, InputRole, InputTextContent, Item,
-    MessageItem, OutputItem, OutputMessage, OutputMessageContent, OutputTextContent,
-    Response,
+    MessageItem, OutputItem, OutputMessage, OutputMessageContent, OutputTextContent, Response,
 };
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize};
@@ -270,6 +269,12 @@ impl History {
     pub fn clear(&self) {
         let mut items = self.items.borrow_mut();
         items.clear();
+    }
+
+    pub fn replace_first_system_prompt(&self, text: &str) {
+        self.add_system_input(text);
+        let mut items = self.items.borrow_mut();
+        items.swap_remove(0);
     }
 }
 

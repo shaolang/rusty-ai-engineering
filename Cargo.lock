@@ -2923,11 +2923,11 @@ dependencies = [
  "argh",
  "arrow-array",
  "async-openai",
+ "fancy-regex 0.17.0",
  "fastembed",
  "futures",
  "lancedb",
  "lzma-sys",
- "pcre2",
  "serde",
  "serde_json",
  "tokio",
@@ -2998,6 +2998,17 @@ name = "fancy-regex"
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "998b056554fbe42e03ae0e152895cd1a7e1002aec800fdc6635d20270260c46f"
+dependencies = [
+ "bit-set",
+ "regex-automata",
+ "regex-syntax",
+]
+
+[[package]]
+name = "fancy-regex"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72cf461f865c862bb7dc573f643dd6a2b6842f7c30b07882b56bd148cc2761b8"
 dependencies = [
  "bit-set",
  "regex-automata",
@@ -6191,28 +6202,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcre2"
-version = "0.2.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e970b0fcce0c7ee6ef662744ff711f21ccd6f11b7cf03cd187a80e89797fc67"
-dependencies = [
- "libc",
- "log",
- "pcre2-sys",
-]
-
-[[package]]
-name = "pcre2-sys"
-version = "0.2.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18b9073c1a2549bd409bf4a32c94d903bb1a09bf845bc306ae148897fa0760a4"
-dependencies = [
- "cc",
- "libc",
- "pkg-config",
-]
-
-[[package]]
 name = "pdf-extract"
 version = "0.7.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6847,11 +6836,11 @@ dependencies = [
  "argh",
  "arrow-array",
  "async-openai",
+ "fancy-regex 0.17.0",
  "fastembed",
  "futures",
  "lancedb",
  "lzma-sys",
- "pcre2",
  "serde",
  "tokio",
  "utils",
@@ -7101,6 +7090,16 @@ dependencies = [
  "getrandom 0.2.16",
  "libredox",
  "thiserror 2.0.17",
+]
+
+[[package]]
+name = "reduce-hallucinations"
+version = "0.1.0"
+dependencies = [
+ "eval-chatbot",
+ "fancy-regex 0.17.0",
+ "tokio",
+ "utils",
 ]
 
 [[package]]

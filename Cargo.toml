@@ -13,6 +13,7 @@ members  = [
   '07-rag-chatbot',
   '08-eval-chatbot',
   '08-generating-traces',
+  '10-reduce-hallucinations',
   'utils',
   'vector-db',
   'vector-db-macro',
@@ -24,11 +25,11 @@ argh         = '0.1'
 arrow-array  = '56.2'
 async-openai = { version='0.32', features=['responses'] }
 csv          = '1.4'
+fancy-regex  = '0.17'
 fastembed    = '5.8'
 futures      = '0'
 lancedb      = '0.23'
 lzma-sys     = { version='*', features=['static'] }
-pcre2        = '0.2'
 marrow       = '0.2'
 serde        = '1'
 serde_arrow  = { version = '0.13', features=['arrow-56'] }  # arrow-56 'cos arrow-array

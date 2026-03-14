@@ -3,7 +3,7 @@ use std::fs;
 use arrow_array::RecordBatch;
 use async_openai::types::responses::{CreateResponse, CreateResponseArgs};
 use async_openai::{Client, config::OpenAIConfig};
-use pcre2::bytes::RegexBuilder;
+use fancy_regex::RegexBuilder;
 use utils::{Args, Green, History, Red, cprintln, get_output, parse_args, read_stdin};
 use vector_db::{VectorDb, VectorDbRecord};
 
@@ -94,13 +94,12 @@ fn combine_batches_to_string(batches: Vec<RecordBatch>) -> String {
 }
 
 fn split_markdown_by_h1(md_text: impl AsRef<str>) -> Vec<String> {
-    RegexBuilder::new()
-        .dotall(true)
-        .crlf(true)
-        .build(r#"(?m)^# .+?(?=^# |\Z)"#)
+    RegexBuilder::new(r#"(?m)^# .+?(?=^# |\Z)"#)
+        .dot_matches_new_line(true)
+        .multi_line(true)
+        .build()
         .expect("well-formed regex")
-        .find_iter(md_text.as_ref().as_bytes())
-        .filter_map(|m| m.map(|m| m.as_bytes()).ok())
-        .map(|m| String::from_utf8_lossy(m).trim().to_string())
+        .find_iter(md_text.as_ref())
+        .map(|m| m.unwrap().as_str().to_string())
         .collect()
 }

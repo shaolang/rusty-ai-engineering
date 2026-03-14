@@ -26,9 +26,10 @@ async fn main() {
         let rec = OutRecord {
             topic: query.topic.clone(),
             query: query.query.clone(),
-            history: serde_json::to_string(
-                &exclude_final_response( serde_json::to_value(&openai.history).unwrap())
-            ).unwrap(),
+            history: serde_json::to_string(&exclude_final_response(
+                serde_json::to_value(&openai.history).unwrap(),
+            ))
+            .unwrap(),
             response,
         };
         writer.serialize(rec).unwrap();

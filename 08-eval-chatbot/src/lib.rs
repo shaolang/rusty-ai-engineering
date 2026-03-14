@@ -52,7 +52,7 @@ struct Chunk {
 }
 
 impl OpenAI {
-    fn new(system_input: &str) -> Self {
+    pub fn new(system_input: &str) -> Self {
         let args = utils::parse_args();
         let config = async_openai::config::OpenAIConfig::new().with_api_base(args.base_url);
         let history = utils::History::new();
@@ -131,13 +131,12 @@ fn create_chunks_from(manual: &str) -> Vec<Chunk> {
 }
 
 fn split_markdown_by_h1(md_text: impl AsRef<str>) -> Vec<String> {
-    pcre2::bytes::RegexBuilder::new()
-        .dotall(true)
-        .crlf(true)
-        .build(r#"(?m)^# .+?(?=^# |\Z)"#)
+    fancy_regex::RegexBuilder::new(r#"(?m)^# .+?(?=^# |\Z)"#)
+        .dot_matches_new_line(true)
+        .multi_line(true)
+        .build()
         .expect("well-formed regex")
-        .find_iter(md_text.as_ref().as_bytes())
-        .filter_map(|m| m.map(|m| m.as_bytes()).ok())
-        .map(|m| String::from_utf8_lossy(m).trim().to_string())
+        .find_iter(md_text.as_ref())
+        .map(|m| m.unwrap().as_str().to_string())
         .collect()
 }
