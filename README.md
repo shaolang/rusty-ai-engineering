@@ -33,6 +33,8 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
 * Chapter 8: Measuring Quality with Evals
   * [Setting Up Our App](./08-eval-chatbot/src/main.rs)
   * [Generating Traces](./08-generating-traces/src/main.rs)
+* Chapter 10: Reducing Hallucinations
+  * [Reducing Hallucinations](./10-reduce-hallucinations/src/main.rs)
 
 ### Notable Differences
 Other than the language and the libraries used, this port:
