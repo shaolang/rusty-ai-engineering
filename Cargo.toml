@@ -14,6 +14,7 @@ members  = [
   '08-eval-chatbot',
   '08-generating-traces',
   '10-reduce-hallucinations',
+  '11-expand-query',
   'utils',
   'vector-db',
   'vector-db-macro',

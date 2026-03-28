@@ -31,10 +31,19 @@ However, when running the demo, drop the chapter prefix when the package `-p` (a
 * Chapter 7: Efficiently Adding Knowledge with RAG
   * [Implementing a RAG chatbot](./07-rag-chatbot/src/main.rs)
 * Chapter 8: Measuring Quality with Evals
-  * [Setting Up Our App](./08-eval-chatbot/src/main.rs)
-  * [Generating Traces](./08-generating-traces/src/main.rs)
+  * [Setting Up Our App][08-eval-chatbot]
+  * [Generating Traces](./08-generating-traces/src/main.rs): reuses implementation from
+    [Setting Up Our App][eval-chatbot] for simplification
 * Chapter 10: Reducing Hallucinations
-  * [Reducing Hallucinations](./10-reduce-hallucinations/src/main.rs)
+  * [Reducing Hallucinations][10-reduce_hallucinations]: reuses implementation from
+    [Setting Up Our App][08-eval-chatbot] for simplification
+* Chapter 11: Evaluating and Optimizing RAG
+  * [Expanding the Query](./11-expand-query/src/main.rs): reuses implementation from
+    [Reducing Hallucinations][10-reduce_hallucinations] for simplication
+
+
+[08-eval-chatbot]: ./08-eval-chatbot/src/main.rs
+[10-reduce-hallucinations]: ./10-reduce-hallucinations/src/lib.rs
 
 ### Notable Differences
 Other than the language and the libraries used, this port:
@@ -71,6 +80,7 @@ the publisher.
 
 [async-openai]: https://github.com/64bit/async-openai
 [book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
+[fastembed]: https://github.com/Anush008/fastembed-rs
 [lancedb]: https://github.com/lancedb/lancedb
 [lm-studio]: https://lmstudio.ai/
 [ollama]: https://ollama.com/

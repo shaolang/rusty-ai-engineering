@@ -276,6 +276,11 @@ impl History {
         let mut items = self.items.borrow_mut();
         items.swap_remove(0);
     }
+
+    pub fn remove_last(&self) {
+        let mut items = self.items.borrow_mut();
+        items.pop().unwrap();
+    }
 }
 
 impl Serialize for History {

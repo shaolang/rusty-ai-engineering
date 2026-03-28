@@ -2968,6 +2968,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "expand-query"
+version = "0.1.0"
+dependencies = [
+ "eval-chatbot",
+ "reduce-hallucinations",
+ "tokio",
+ "utils",
+]
+
+[[package]]
 name = "exr"
 version = "1.74.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
