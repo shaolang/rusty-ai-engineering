@@ -1,39 +1,7 @@
 [workspace]
-members  = [
-  '01-hello-world',
-  '05-augment-prompt-pirates',
-  '05-augment-prompt-spanish-translation',
-  '05-augment-prompt-grammar-checker',
-  '05-multi-turn-dialogue',
-  '05-state-with-memory-systems',
-  '05-developer-message',
-  '05-prompt-as-array',
-  '06-prep-data',
-  '06-knowledge-chatbot',
-  '07-rag-chatbot',
-  '08-eval-chatbot',
-  '08-generating-traces',
-  '10-reduce-hallucinations',
-  '11-expand-query',
-  'utils',
-  'vector-db',
-  'vector-db-macro',
-]
+members  = []
 resolver = '3'
 
 [workspace.dependencies]
-argh         = '0.1'
-arrow-array  = '56.2'
-async-openai = { version='0.32', features=['responses'] }
-csv          = '1.4'
-fancy-regex  = '0.17'
-fastembed    = '5.8'
-futures      = '0'
-lancedb      = '0.23'
-lzma-sys     = { version='*', features=['static'] }
-marrow       = '0.2'
-serde        = '1'
-serde_arrow  = { version = '0.13', features=['arrow-56'] }  # arrow-56 'cos arrow-array
-serde_json   = '1'
-termcolor    = '1.4'
+openai-oxide = { version='0.14', features=['responses'], default-features=false }
 tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread'] }
