@@ -1,0 +1,9 @@
+[package]
+name    = 'augment-prompt-pirate-tone'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+argh         = { workspace = true }
+openai-oxide = { workspace = true }
+tokio        = { workspace = true }

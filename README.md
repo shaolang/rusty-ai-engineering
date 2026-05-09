@@ -6,6 +6,9 @@ Pragmatic Programmers.
 ## Ports by Chapter
 - Chapter 1: HeLLMo, World!
   - [Creating Our First App](./01-hello-world/src/main.rs)
+- Chapter 5: Building a Chatbot
+  - Augmenting the Prompt
+    - [Pirate tone](./05-augment-prompt-pirate-tone/src/main.rs)
 
 ### Resources
 For convenience, all the files in `resources` directory are copied from the

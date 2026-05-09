@@ -1,5 +1,8 @@
 [workspace]
-members  = ['01-hello-world']
+members  = [
+  '01-hello-world',
+  '05-augment-prompt-pirate-tone',
+]
 resolver = '3'
 
 [workspace.dependencies]
