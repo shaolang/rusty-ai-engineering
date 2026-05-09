@@ -17,6 +17,7 @@ CLI arguments:
   - Augmenting the Prompt
     - [Pirate tone](./05-augment-prompt-pirate-tone/src/main.rs)
     - [Spanish translation](./05-augment-prompt-spanish-translation/src/main.rs)
+    - [Grammar checker](./05-augment-prompt-grammar-checker/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
