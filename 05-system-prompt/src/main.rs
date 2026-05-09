@@ -10,9 +10,10 @@ async fn main() -> Result<()> {
                                human user. Respond to the user like a pirate.";
     let assistant_msg = "Assistant: Arrgh, how can I help you, matey?\n\nUser: ";
     let mut user_input = input(assistant_msg);
-    let mut history = developer_msg.to_owned() + assistant_msg + &user_input;
+    let mut history = developer_msg.to_owned() + assistant_msg;
 
     while user_input != "exit" {
+        history += &user_input;
         let req = ResponseCreateRequest::new(&args.model)
             .temperature(args.temperature)
             .input(history.clone());
