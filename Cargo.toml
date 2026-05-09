@@ -2,6 +2,7 @@
 members  = [
   '01-hello-world',
   '05-augment-prompt-pirate-tone',
+  'helpers',
 ]
 resolver = '3'
 
