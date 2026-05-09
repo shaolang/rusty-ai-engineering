@@ -4,6 +4,7 @@ members  = [
   '05-augment-prompt-pirate-tone',
   '05-augment-prompt-spanish-translation',
   '05-augment-prompt-grammar-checker',
+  '05-multi-turn-dialog',
   'helpers',
 ]
 resolver = '3'
