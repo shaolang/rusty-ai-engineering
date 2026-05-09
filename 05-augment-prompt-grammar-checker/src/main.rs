@@ -5,7 +5,7 @@ use openai_oxide::types::responses::ResponseCreateRequest;
 async fn main() -> Result<()> {
     let args = Args::parse();
     let client = create_openai_client(&args)?;
-    let user_input = input("Enter a text for grammatical check.");
+    let user_input = input("Enter a text for grammatical check.\n");
     let req = ResponseCreateRequest::new(&args.model)
         .temperature(args.temperature)
         .input(format!(

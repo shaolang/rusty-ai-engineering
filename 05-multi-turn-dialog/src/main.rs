@@ -12,9 +12,9 @@ async fn main() -> Result<()> {
             .temperature(args.temperature)
             .input(user_input);
         let response = client.responses().create(req).await?;
-        println!("{}\n\n", response.output_text());
+        println!("{}", response.output_text());
 
-        user_input = input("User: ");
+        user_input = input("\nUser: ");
     }
 
     Ok(())

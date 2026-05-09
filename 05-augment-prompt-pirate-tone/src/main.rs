@@ -5,7 +5,7 @@ use openai_oxide::types::responses::ResponseCreateRequest;
 async fn main() -> Result<()> {
     let args: Args = Args::parse();
     let client = create_openai_client(&args)?;
-    let user_input = input("Ahoy! Got questions? Spit 'em out, ye scallywag!");
+    let user_input = input("Ahoy! Got questions? Spit 'em out, ye scallywag!\n");
     let req = ResponseCreateRequest::new(&args.model)
         .temperature(args.temperature)
         .input(format!(
