@@ -4,11 +4,25 @@ Rust implementations of the book [A Common Sense Guide to AI Engineering][book] 
 Pragmatic Programmers.
 
 ## Ports by Chapter
+All ports expect the environment variable `OPENAI_API_KEY` set. The ports support the follow
+CLI arguments:
+- `--model`: use the specified the model for the demo
+- `--base-url`: connect to model at the specified url; defaults to `https://api.openai.com/v1`
+- `--temperature`: set the model's temperature; defaults to 0.0
+- `--help`:  show the arguments available
+
 - Chapter 1: HeLLMo, World!
   - [Creating Our First App](./01-hello-world/src/main.rs)
 - Chapter 5: Building a Chatbot
   - Augmenting the Prompt
     - [Pirate tone](./05-augment-prompt-pirate-tone/src/main.rs)
+    - [Spanish translation](./05-augment-prompt-spanish-translation/src/main.rs)
+
+### Notable differences
+Other than the port in chapter 1, all other ports use commonly used functionalities
+in [helpers crate](./helpers/src/lib.rs). Chapter 1's port is deliberately left as-is
+to show that the full implementation in Rust isn't that complicated, as compared to Python's.
+Using `helpers` crate in the rest of the ports minimize distractions from implementation details.
 
 ### Resources
 For convenience, all the files in `resources` directory are copied from the

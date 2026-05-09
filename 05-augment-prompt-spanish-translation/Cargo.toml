@@ -1,0 +1,9 @@
+[package]
+name    = 'augment-prompt-spanish-translation'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+openai-oxide = { workspace = true }
+helpers      = { path = '../helpers' }
+tokio        = { workspace = true }
