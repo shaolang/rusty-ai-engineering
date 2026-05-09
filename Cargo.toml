@@ -6,6 +6,7 @@ members  = [
   '05-augment-prompt-grammar-checker',
   '05-multi-turn-dialog',
   '05-memory-systems',
+  '05-system-prompt',
   'helpers',
 ]
 resolver = '3'

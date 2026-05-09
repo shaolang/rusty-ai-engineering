@@ -28,7 +28,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
     - [Spanish translation](./05-augment-prompt-spanish-translation/src/main.rs)
     - [Grammar checker](./05-augment-prompt-grammar-checker/src/main.rs)
   - [Adding Multi-Turn Dialogue](./05-multi-turn-dialog/src/main.rs)
-  - [Managing state with memory systems](./05-memory-systems/src/main.rs)
+  - [Managing State With Memory Systems](./05-memory-systems/src/main.rs)
+  - [Adding a System Prompt](./05-system-prompt/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
