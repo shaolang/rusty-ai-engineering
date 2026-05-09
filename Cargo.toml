@@ -1,7 +1,8 @@
 [workspace]
-members  = []
+members  = ['01-hello-world']
 resolver = '3'
 
 [workspace.dependencies]
+argh         = '0.1'
 openai-oxide = { version='0.14', features=['responses'], default-features=false }
 tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread'] }
