@@ -2,7 +2,7 @@ use openai_oxide::{
     OpenAI, OpenAIError,
     types::{
         beta::Role,
-        responses::{ResponseInput, ResponseInputItem},
+        responses::{ResponseInput, ResponseInputItem, ResponseOutputContent, ResponseOutputItem},
     },
 };
 use serde_json::Value;
@@ -12,6 +12,14 @@ use crate::Args;
 pub fn create_openai_client(args: &Args) -> Result<OpenAI, OpenAIError> {
     let config = openai_oxide::ClientConfig::from_env()?.base_url(&args.base_url);
     Ok(OpenAI::with_config(config))
+}
+
+pub fn extract_texts(output: &[ResponseOutputItem]) -> String {
+    output
+        .iter()
+        .map(|o| o.extract_texts())
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 #[derive(Clone, Debug)]
@@ -33,6 +41,7 @@ impl History {
         Self { messages }
     }
 
+    add_msg!(add_developer_msg, Role::Developer);
     add_msg!(add_assistant_msg, Role::Assistant);
     add_msg!(add_user_msg, Role::User);
 
@@ -42,8 +51,34 @@ impl History {
     }
 }
 
-impl From<History> for ResponseInput {
-    fn from(history: History) -> Self {
-        Self::Messages(history.messages)
+impl From<&History> for ResponseInput {
+    fn from(history: &History) -> Self {
+        Self::Messages(history.messages.clone())
+    }
+}
+
+trait ResponseOutputItemExt {
+    fn extract_texts(&self) -> String;
+}
+
+impl ResponseOutputItemExt for ResponseOutputItem {
+    fn extract_texts(&self) -> String {
+        let ResponseOutputItem {
+            content: Some(contents),
+            ..
+        } = self
+        else {
+            return "".to_string();
+        };
+        contents
+            .iter()
+            .filter_map(|c| {
+                let ResponseOutputContent { text: Some(t), .. } = c else {
+                    return None;
+                };
+                Some(t.as_str())
+            })
+            .collect::<Vec<&str>>()
+            .join("\n")
     }
 }

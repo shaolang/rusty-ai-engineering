@@ -7,6 +7,7 @@ members  = [
   '05-multi-turn-dialog',
   '05-memory-systems',
   '05-system-prompt',
+  '05-message-array',
   'helpers',
 ]
 resolver = '3'

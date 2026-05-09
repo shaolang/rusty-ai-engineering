@@ -698,6 +698,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "message-array"
+version = "0.1.0"
+dependencies = [
+ "helpers",
+ "openai-oxide",
+ "tokio",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"

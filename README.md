@@ -30,6 +30,14 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [Adding Multi-Turn Dialogue](./05-multi-turn-dialog/src/main.rs)
   - [Managing State With Memory Systems](./05-memory-systems/src/main.rs)
   - [Adding a System Prompt](./05-system-prompt/src/main.rs)
+  - [Building the Messages Array](./05-message-array/src/main.rs)
+    - This demo uses the [helpers::History](./helpers/src/openai.rs) struct to simplify the
+      message collection; as of openai-oxide version 0.14, when
+      [openai_oxide::resources::responses::create][resp-create] receives the
+      `ResponseCreateRequest` with input type `Vec<ResponseInputItem>`,
+      [openai_oxide::resources::responses::Response::output_text][resp-output-text]
+      method will always return an empty string. The helper function
+      [helper::extract_texts][extract-texts] extracts all texts and return a string.
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
@@ -43,3 +51,6 @@ For convenience, all the files in `resources` directory are copied from the
 the publisher.
 
 [book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
+[extract-texts]: ./helpers/src/openai.rs
+[resp-create]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/resources/responses/struct.Responses.html#method.create
+[resp-output-text]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/types/responses/struct.Response.html#method.output_text
