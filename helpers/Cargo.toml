@@ -6,3 +6,4 @@ edition = '2024'
 [dependencies]
 argh         = { workspace = true }
 openai-oxide = { workspace = true }
+serde_json   = { workspace = true }
