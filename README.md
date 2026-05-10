@@ -3,12 +3,15 @@
 Rust implementations of the book [A Common Sense Guide to AI Engineering][book] published by
 Pragmatic Programmers.
 
-All ports expect the environment variable `OPENAI_API_KEY` set. The ports support the follow
+Most ports expect the environment variable `OPENAI_API_KEY` set and support the follow
 CLI arguments:
 - `--model`: use the specified the model for the demo
 - `--base-url`: connect to model at the specified url; defaults to `https://api.openai.com/v1`
 - `--temperature`: set the model's temperature; defaults to 0.0
 - `--help`:  show the arguments available
+
+Ports that differ from the above are:
+- [token-count](./06-token-count/src/main.rs) from chapter 6
 
 As this repo uses Cargo workspaces to organize the demonstrations, each demo's source directory
 has the book's chapter as its prefix, e.g., `01-hello-world` is the demo from chapter 1. However,
@@ -38,6 +41,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
       [openai_oxide::resources::responses::Response::output_text][resp-output-text]
       method will always return an empty string. The helper function
       [helper::extract_texts][extract-texts] extracts all texts and return a string.
+- Chapter 6: Augmenting a Prompt with Knowledge
+  - [token-count](./06-token-count/src/main.rs): does not require an OpenAI client connection
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
