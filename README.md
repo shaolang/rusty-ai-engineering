@@ -43,6 +43,7 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
       [helper::extract_texts][extract-texts] extracts all texts and return a string.
 - Chapter 6: Augmenting a Prompt with Knowledge
   - [token-count](./06-token-count/src/main.rs): does not require an OpenAI client connection
+  - [prepare-data](./06-prepare-data/src/main.rs): does not require an OpenAI client connection
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
