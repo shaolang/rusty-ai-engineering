@@ -14,12 +14,14 @@ pub fn create_openai_client(args: &Args) -> Result<OpenAI, OpenAIError> {
     Ok(OpenAI::with_config(config))
 }
 
-pub fn extract_texts(output: &[ResponseOutputItem]) -> String {
-    output
-        .iter()
-        .map(|o| o.extract_texts())
-        .collect::<Vec<_>>()
-        .join("\n")
+pub fn extract_texts(output: &[ResponseOutputItem], last_only: bool) -> String {
+    let texts: Vec<String> = output.iter().map(|o| o.extract_texts()).collect::<Vec<_>>();
+
+    if last_only {
+        texts.last().expect("text responses exist").clone()
+    } else {
+        texts.join("\n")
+    }
 }
 
 #[derive(Clone, Debug)]

@@ -10,6 +10,7 @@ members  = [
   '05-message-array',
   '06-token-count',
   '06-prepare-data',
+  '06-knowledge-chatbot',
   'helpers',
 ]
 resolver = '3'

@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
             .temperature(args.temperature)
             .input(&history);
         let response = client.responses().create(req).await?;
-        let llm_output_text = extract_texts(&response.output);
+        let llm_output_text = extract_texts(&response.output, true);
         println!("Assistant: {llm_output_text}");
         history.add_assistant_msg(llm_output_text);
 
