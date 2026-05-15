@@ -7,9 +7,9 @@ async fn main() -> Result<()> {
     let client = create_openai_client(&args)?;
     let mut history = String::new();
     let assistant_message = "Assistant: How can I help you today?";
-    history.push_str(&assistant_message);
+    history.push_str(assistant_message);
 
-    let mut user_input = input(&format!("{assistant_message}\nUser: "));
+    let mut user_input = input(format!("{assistant_message}\nUser: "));
     while &user_input != "exit" {
         history.push_str(&format!("\nUser: {user_input}"));
         let req = ResponseCreateRequest::new(&args.model)
