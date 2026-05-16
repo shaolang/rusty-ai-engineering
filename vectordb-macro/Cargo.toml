@@ -1,0 +1,10 @@
+[package]
+name    = 'vectordb-macro'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+zyn = { version = '0.5', features = ['diagnostics', 'ext'] }
+
+[lib]
+proc-macro = true

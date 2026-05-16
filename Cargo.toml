@@ -12,6 +12,7 @@ members  = [
   '06-prepare-data',
   '06-knowledge-chatbot',
   'helpers',
+  'vectordb-macro',
 ]
 resolver = '3'
 
@@ -19,4 +20,4 @@ resolver = '3'
 argh         = '0.1'
 openai-oxide = { version='0.14', features=['responses'], default-features=false }
 serde_json   = '1'
-tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread'] }
+tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread', 'sync'] }

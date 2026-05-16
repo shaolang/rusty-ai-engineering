@@ -4,6 +4,14 @@ version = '0.1.0'
 edition = '2024'
 
 [dependencies]
-argh         = { workspace = true }
-openai-oxide = { workspace = true }
-serde_json   = { workspace = true }
+argh           = { workspace = true }
+fastembed      = { version = '5.13',
+                   features = ['hf-hub-rustls-tls', 'ort-download-binaries-rustls-tls'],
+                   default-features = false }
+openai-oxide   = { workspace = true }
+serde_json     = { workspace = true }
+sqlite-vec     = '0.1'
+tokio          = { workspace = true }
+tokio-rusqlite = { version='0.7', features=['bundled'] }
+vectordb-macro = { path = '../vectordb-macro' }
+zerocopy       = '0.8'
