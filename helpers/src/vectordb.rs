@@ -1,8 +1,7 @@
 extern crate self as helpers;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use fastembed::TextEmbedding;
-use tokio::sync::Mutex;
 use tokio_rusqlite::{Connection, Row, Transaction};
 
 use crate::Result;
@@ -40,11 +39,12 @@ impl VectorDb {
         Ok(())
     }
 
-    pub async fn insert<E: Embed + 'static>(&'static self, es: Vec<E>) -> Result<()> {
-        let mut embedder = self.embedder.lock().await;
+    pub async fn insert<E: Embed + 'static>(&self, es: Vec<E>) -> Result<()> {
+        let embedder = Arc::clone(&self.embedder);
 
         self.conn
             .call(move |conn| {
+                let mut embedder = embedder.lock().unwrap();
                 let tx = conn.transaction()?;
                 for e in es {
                     let _ = e.insert(&tx, &mut embedder);
@@ -62,7 +62,7 @@ impl VectorDb {
     ) -> Result<Vec<E>>
     {
         let embedding: Vec<f32> = {
-            let mut embedder = self.embedder.lock().await;
+            let mut embedder = self.embedder.lock().unwrap();
             let es = embedder.embed(&[query.as_ref()], None)?;
             es.first().unwrap().to_owned()
         };
