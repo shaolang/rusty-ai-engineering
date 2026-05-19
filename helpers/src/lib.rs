@@ -1,7 +1,7 @@
 mod args;
 mod io;
 mod openai;
-mod vectordb;
+pub mod vectordb;
 
 pub use args::*;
 pub use io::*;

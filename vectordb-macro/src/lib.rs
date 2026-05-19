@@ -25,6 +25,10 @@ fn vector(
         let field_infos: Vec<FieldInfo> = field_infos.iter().map(|f| f.clone().unwrap()).collect();
         zyn::zyn!(
             const _: () = {
+                use helpers::vectordb::zerocopy::IntoBytes;
+                use helpers::vectordb::fastembed::TextEmbedding;
+                use helpers::vectordb::tokio_rusqlite;
+
                 @generate_embed_impl(ident = &ident, fis = &field_infos)
                 @generate_from_impl(ident = &ident, fis = &field_infos)
             };
@@ -62,9 +66,7 @@ fn generate_embed_impl<'a>(ident: &'a Ident, fis: &'a [FieldInfo]) -> TokenStrea
                 {{ search_stmt }}.to_string()
             }
 
-            fn insert(self, tx: &tokio_rusqlite::Transaction, embedder: &mut fastembed::TextEmbedding) -> helpers::Result<()> {
-                use zerocopy::IntoBytes;
-
+            fn insert(self, tx: &tokio_rusqlite::Transaction, embedder: &mut TextEmbedding) -> helpers::Result<()> {
                 let rowid: i64 = @insert_row_stmt(entity_name = &entity_name, fis = fis);
                 let embedding = embedder.embed(&[&self.{{ embed_field.name }}], None)?;
                 let embedding = embedding.first().unwrap();
@@ -78,7 +80,8 @@ fn generate_embed_impl<'a>(ident: &'a Ident, fis: &'a [FieldInfo]) -> TokenStrea
 
 #[zyn::element]
 fn generate_from_impl<'a>(ident: &'a Ident, fis: &'a [FieldInfo]) -> TokenStream {
-    let fields = fis.iter()
+    let fields = fis
+        .iter()
         .enumerate()
         .map(|(i, f)| zyn::zyn!( {{ f.name }}: row.get::<_, String>({{ i }}).unwrap() ));
     zyn::zyn!(
@@ -151,7 +154,7 @@ fn insert_row_stmt<'a>(entity_name: &'a str, fis: &'a [FieldInfo]) -> TokenStrea
         .map(|i| format!("?{i}"))
         .collect::<Vec<_>>()
         .join(",");
-    let columns = columns(fis);
+    let columns = columns(fis, "");
     let stmt =
         format!("INSERT INTO {entity_name} ({columns}) VALUES ({placeholders}) RETURNING ROWID");
     let field_names = zyn::zyn!(@for (f in fis.iter()) { self.{{ f.name }}, });
@@ -175,17 +178,17 @@ fn insert_embedding_stmt<'a>(entity_name: &'a str, embed_field_name: &'a str) ->
 }
 
 fn search_stmt(entity_name: &str, embed_field_name: &str, fis: &[FieldInfo]) -> String {
-    let columns = columns(fis);
+    let columns = columns(fis, "t.");
     format!(
         "SELECT {columns} \
            FROM {entity_name} t JOIN {entity_name}_vec v ON t.rowid = v.rowid \
-          WHERE v.{embed_field_name} MATCH ?1 and k = ?2"
+          WHERE v.{embed_field_name}_embedding MATCH ?1 and k = ?2"
     )
 }
 
-fn columns(fis: &[FieldInfo]) -> String {
+fn columns(fis: &[FieldInfo], prefix: &str) -> String {
     fis.iter()
-        .map(|fi| format!("t.{}", fi.name))
+        .map(|fi| format!("{}{}", prefix, fi.name))
         .collect::<Vec<_>>()
         .join(",")
 }

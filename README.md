@@ -45,12 +45,20 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [token-count](./06-token-count/src/main.rs): does not require an OpenAI client connection
   - [prepare-data](./06-prepare-data/src/main.rs): does not require an OpenAI client connection
   - [knowledge-chatbot](./06-knowledge-chatbot/src/main.rs)
+- Chapter 7: Efficient Adding Knowledge with RAG
+  - [rag-chatbot](./07-rag-chatbot/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
 in [helpers crate](./helpers/src/lib.rs). Chapter 1's port is deliberately left as-is
 to show that the full implementation in Rust isn't that complicated, as compared to Python's.
 Using `helpers` crate in the rest of the ports minimize distractions from implementation details.
+
+Instead of Pinecone, this repo uses [sqlite-vec][sqlite-vec] and [fastembed-rs][fastembed-rs]
+as its vector database. This repo originally used [embedded LanceDB][lancedb] as its vector database
+but replaces it with sqlite-vec because the former bloats the binaries rather significantly and
+requires protoc toolchain for compilation; sqlite-vec is lighter comparatively and meets the need
+of this repo.
 
 ### Resources
 For convenience, all the files in `resources` directory are copied from the
@@ -59,5 +67,8 @@ the publisher.
 
 [book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
 [extract-texts]: ./helpers/src/openai.rs
+[fastembed-rs]: https://github.com/Anush008/fastembed-rs
+[lancedb]: https://docs.lancedb.com/#1-lancedb-oss
 [resp-create]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/resources/responses/struct.Responses.html#method.create
 [resp-output-text]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/types/responses/struct.Response.html#method.output_text
+[sqlite-vec]: https://github.com/asg017/sqlite-vec

@@ -1,10 +1,15 @@
 extern crate self as helpers;
-use std::sync::{Arc, Mutex};
+use std::{
+    path::Path,
+    sync::{Arc, Mutex},
+};
 
-use fastembed::TextEmbedding;
-use tokio_rusqlite::{Connection, Row, Transaction};
+pub use fastembed::{self, TextEmbedding};
+pub use tokio_rusqlite::{self, Connection, Row, Transaction};
+pub use zerocopy;
 
 use crate::Result;
+pub use vectordb_macro::Embed;
 
 pub trait Embed: Send + Sync + for<'a, 'b> From<&'a Row<'b>> {
     fn create_sqlite_table_stmt() -> String;
@@ -19,7 +24,7 @@ pub struct VectorDb {
 }
 
 impl VectorDb {
-    pub async fn try_connect(db_path: impl AsRef<str>) -> Result<Self> {
+    pub async fn try_connect(db_path: impl AsRef<Path>) -> Result<Self> {
         let embedder = Arc::new(Mutex::new(load_embedder()?));
         let conn = connect_sqlite(db_path.as_ref()).await?;
         Ok(Self { conn, embedder })
@@ -47,7 +52,7 @@ impl VectorDb {
                 let mut embedder = embedder.lock().unwrap();
                 let tx = conn.transaction()?;
                 for e in es {
-                    let _ = e.insert(&tx, &mut embedder);
+                    e.insert(&tx, &mut embedder).expect("record inserted");
                 }
                 tx.commit()
             })
@@ -59,8 +64,7 @@ impl VectorDb {
         &self,
         query: impl AsRef<str>,
         topk: usize,
-    ) -> Result<Vec<E>>
-    {
+    ) -> Result<Vec<E>> {
         let embedding: Vec<f32> = {
             let mut embedder = self.embedder.lock().unwrap();
             let es = embedder.embed(&[query.as_ref()], None)?;
@@ -75,7 +79,8 @@ impl VectorDb {
 
                 let rows = stmt.query_map(
                     tokio_rusqlite::rusqlite::params![embedding.as_bytes(), topk],
-                |row| Ok(row.into()))?;
+                    |row| Ok(row.into()),
+                )?;
 
                 rows.collect()
             })
@@ -92,7 +97,7 @@ fn load_embedder() -> Result<TextEmbedding> {
     Ok(TextEmbedding::try_new(options)?)
 }
 
-async fn connect_sqlite(path: impl AsRef<std::path::Path>) -> Result<Connection> {
+async fn connect_sqlite(path: impl AsRef<Path>) -> Result<Connection> {
     unsafe {
         use tokio_rusqlite::rusqlite::ffi::{
             sqlite3, sqlite3_api_routines, sqlite3_auto_extension,
