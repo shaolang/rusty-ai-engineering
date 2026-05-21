@@ -12,6 +12,7 @@ members  = [
   '06-prepare-data',
   '06-knowledge-chatbot',
   '07-rag-chatbot',
+  '08-eval-chatbot',
   'helpers',
   'vectordb-macro',
 ]

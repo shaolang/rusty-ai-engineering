@@ -47,6 +47,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [knowledge-chatbot](./06-knowledge-chatbot/src/main.rs)
 - Chapter 7: Efficient Adding Knowledge with RAG
   - [rag-chatbot](./07-rag-chatbot/src/main.rs)
+- Chapter 8: Measuring Quality with Evals
+  - [eval-chatbot](./08-eval-chatbot/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

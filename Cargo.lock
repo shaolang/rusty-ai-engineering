@@ -1235,6 +1235,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "eval-chatbot"
+version = "0.1.0"
+dependencies = [
+ "fancy-regex 0.18.0",
+ "helpers",
+ "openai-oxide",
+ "tokio",
+]
+
+[[package]]
 name = "exr"
 version = "1.74.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
