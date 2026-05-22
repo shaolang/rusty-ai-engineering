@@ -4,7 +4,7 @@ use openai_oxide::types::{
 };
 use serde_json::Value;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct History {
     messages: Vec<ResponseInputItem>,
 }

@@ -1,15 +1,14 @@
 use std::path::Path;
 
-use helpers::{Args, Embed, History, Result, VectorDb, create_openai_client};
-use openai_oxide::OpenAI;
+use helpers::{Args, Embed, History, Result, VectorDb, create_openai_client, extract_texts};
+use openai_oxide::{OpenAI, types::responses::ResponseCreateRequest};
 
-pub async fn setup(db_fname: impl AsRef<Path>) -> Result<(Args, OpenAI, VectorDb, History)> {
-    let args = Args::parse();
+pub async fn setup(args: &Args, db_fname: impl AsRef<Path>) -> Result<(OpenAI, VectorDb, History)> {
     let client = create_openai_client(&args)?;
     let db = populate_vectordb(db_fname).await?;
     let history = init_chat_history();
 
-    Ok((args, client, db, history))
+    Ok((client, db, history))
 }
 
 pub async fn populate_vectordb(path: impl AsRef<Path>) -> Result<VectorDb> {
@@ -48,7 +47,7 @@ pub async fn populate_vectordb(path: impl AsRef<Path>) -> Result<VectorDb> {
     Ok(db)
 }
 
-fn init_chat_history() -> History {
+pub fn init_chat_history() -> History {
     let mut history = History::new();
     history.add_developer_msg(
         "You are an AI customer support techician who is knowledgeable about software products
@@ -74,6 +73,19 @@ pub fn user_prompt(user_input: &str, records: Vec<Record>) -> String {
          Use whatever info from the above documentation excerpts (and no other info) to answer \
          the following query: {user_input}"
     )
+}
+
+pub async fn llm_response(args: &Args, client: &OpenAI, history: &History) -> String {
+    let response = client
+        .responses()
+        .create(
+            ResponseCreateRequest::new(&args.model)
+                .temperature(args.temperature)
+                .input(history),
+        )
+        .await
+        .expect("response request sent");
+    extract_texts(&response.output, true)
 }
 
 #[derive(Embed)]

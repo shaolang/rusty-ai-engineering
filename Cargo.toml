@@ -13,6 +13,7 @@ members  = [
   '06-knowledge-chatbot',
   '07-rag-chatbot',
   '08-eval-chatbot',
+  '08-trace-generator',
   'helpers',
   'vectordb-macro',
 ]
@@ -20,7 +21,9 @@ resolver = '3'
 
 [workspace.dependencies]
 argh         = '0.1'
+csv          = '1.4'
 fancy-regex  = '0.18'
 openai-oxide = { version='0.14', features=['responses'], default-features=false }
+serde        = { version='1', features=['derive'] }
 serde_json   = '1'
 tokio        = { version='1', features=['fs', 'macros', 'rt-multi-thread', 'sync'] }

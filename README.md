@@ -49,6 +49,7 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [rag-chatbot](./07-rag-chatbot/src/main.rs)
 - Chapter 8: Measuring Quality with Evals
   - [eval-chatbot](./08-eval-chatbot/src/main.rs)
+  - [trace-generator](./08-trace-generator/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
