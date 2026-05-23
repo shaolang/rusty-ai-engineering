@@ -7,13 +7,15 @@ async fn main() -> Result<()> {
     let client = create_openai_client(&args)?;
     let documentation =
         std::fs::read_to_string("resources/flamehamster.md").expect("markdown read");
-    let mut history = History::new();
-    history.add_developer_msg(format!(
-        "You are an AI customer support technician who is knowledgeable about software products
+    let mut history = History::new(
+        format!(
+            "You are an AI customer support technician who is knowledgeable about software products
          created by the company called GROSS. One such product is a web browser called
          Flamehamster. You are to answer user queries below solely on the following documentation:
          {documentation}"
-    ));
+        )
+        .into(),
+    );
 
     let assistant_msg = "How can I help you today?";
     history.add_assistant_msg(assistant_msg);

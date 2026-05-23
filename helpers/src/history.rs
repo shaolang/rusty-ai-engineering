@@ -18,18 +18,30 @@ macro_rules! add_msg {
 }
 
 impl History {
-    pub fn new() -> Self {
-        let messages = vec![];
+    pub fn new(system_prompt: Value) -> Self {
+        let input_item = ResponseInputItem {
+            role: Role::Developer,
+            content: system_prompt,
+        };
+        let messages = vec![input_item];
         Self { messages }
     }
 
-    add_msg!(add_developer_msg, Role::Developer);
     add_msg!(add_assistant_msg, Role::Assistant);
     add_msg!(add_user_msg, Role::User);
 
     fn add_msg(&mut self, role: Role, content: Value) {
         let input_item = ResponseInputItem { role, content };
         self.messages.push(input_item);
+    }
+
+    pub fn replace_system_prompt(&mut self, content: Value) {
+        let input_item = ResponseInputItem {
+            role: Role::Developer,
+            content,
+        };
+        self.messages.remove(0);
+        self.messages.insert(0, input_item);
     }
 }
 

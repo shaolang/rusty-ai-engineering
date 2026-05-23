@@ -40,13 +40,10 @@ async fn main() -> Result<()> {
 }
 
 fn new_history() -> History {
-    let mut history = History::new();
-    history.add_developer_msg(
-        "You are an AI customer support technician who is knowledgeable about \
+    let system_prompt = "You are an AI customer support technician who is knowledgeable about \
          software product created by the company called GROSS. One such product \
-         is a web browser called Flamehamster.",
-    );
-    history
+         is a web browser called Flamehamster.";
+    History::new(system_prompt.into())
 }
 
 async fn prep_vectordb(db_path: impl AsRef<std::path::Path>) -> Result<VectorDb> {

@@ -6,8 +6,7 @@ async fn main() -> Result<()> {
     let args = Args::parse();
     let client = create_openai_client(&args)?;
 
-    let mut history = History::new();
-    history.add_developer_msg("You are an AI assistant who always talks like a pirate.");
+    let mut history = History::new("You are an AI assistant who always talks like a pirate".into());
 
     let assistant_msg = "Arrgh, how can I help you, matey?";
     history.add_assistant_msg(assistant_msg);

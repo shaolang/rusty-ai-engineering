@@ -48,18 +48,15 @@ pub async fn populate_vectordb(path: impl AsRef<Path>) -> Result<VectorDb> {
 }
 
 pub fn init_chat_history() -> History {
-    let mut history = History::new();
-    history.add_developer_msg(
+    let system_prompt =
         "You are an AI customer support techician who is knowledgeable about software products
          created by the company called GROSS. The products are:
          * Flamehamster, a web browser.
          * Rumblechirp, an email client.
          * GuineaPigment, a drawing tool for creating/editing SVGs.
          * EMRgency, an electronic medical record system.
-         * Verbiage++, a content management system.",
-    );
-
-    history
+         * Verbiage++, a content management system.";
+    History::new(system_prompt.into())
 }
 
 pub fn user_prompt(user_input: &str, records: Vec<Record>) -> String {
