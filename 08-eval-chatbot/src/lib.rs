@@ -87,9 +87,9 @@ pub async fn llm_response(args: &Args, client: &OpenAI, history: &History) -> St
 
 #[derive(Embed)]
 pub struct Record {
-    id: String,
+    pub id: String,
     #[embed]
-    chunk_text: String,
+    pub chunk_text: String,
 }
 
 impl ToString for Record {
