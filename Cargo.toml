@@ -14,7 +14,7 @@ members  = [
   '07-rag-chatbot',
   '08-eval-chatbot',
   '08-trace-generator',
-  '08-rewrite-history',
+  '09-rewrite-history',
   'helpers',
   'vectordb-macro',
 ]

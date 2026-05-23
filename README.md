@@ -52,7 +52,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
     and [lib.rs](./08-eval-chatbot/src/lib.rs) contains the functions extracted for reuse
     in trace-generator and rewrite-history demos
   - [trace-generator](./08-trace-generator/src/main.rs)
-  - [rewrite-history](./08-rewrite-history/src/main.rs)
+- Chapter 9: Prompt Engineering
+  - [rewrite-history](./09-rewrite-history/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
