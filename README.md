@@ -60,7 +60,9 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
 - Chapter 11: Evaluating and Optimizing RAG
   - [expand-query](./11-expand-query/src/main.rs)
 - Chapter 12: Equipping an LLM with Tools
-  - [multiplication](./12-multiplication/src/main.rs)
+  - [multiplication](./12-multiplication/src/main.rs);
+    [exports some functions](./12-multiplication/src/lib.rs) for reuse by feed-results-back demo
+  - [feed-results-back](./12-feed-results-back/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

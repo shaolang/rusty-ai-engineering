@@ -1,18 +1,18 @@
 use helpers::{Args, History, Result, create_openai_client, extract_texts};
 use openai_oxide::{OpenAI, types::responses::ResponseCreateRequest};
 
-pub fn init() -> Result<(Args, OpenAI, History)> {
+pub fn init(additional_instructions: Option<String>) -> Result<(Args, OpenAI, History)> {
     let args = Args::parse();
     let client = create_openai_client(&args)?;
+    let additional_instructions = additional_instructions.unwrap_or("".to_string());
     let history = History::new(
-        "You are a helpful AI assistant. If you ever need o multiply two numbers, DO NOT attempt
+        format!("You are a helpful AI assistant. If you ever need to multiply two numbers, DO NOT attempt
          to answer with your internal knowledge. Instead, output a special notation with double
          angle brackets like this: <<multiply(first_number, second_number)>>.
          For example, if a user asks you to multiply 50 by 2,
          your output should be: <<multiply(50, 2)>>. A second example: a user asks you how many
          apples there are in five baskets and each basket contains twelve apples. Your output
-         should be: <<multiply(5, 12)>>."
-            .into(),
+         should be: <<multiply(5, 12)>>. {additional_instructions}").into()
     );
 
     Ok((args, client, history))

@@ -18,6 +18,7 @@ members  = [
   '10-reduce-hallucinations',
   '11-expand-query',
   '12-multiplication',
+  '12-feed-results-back',
   'helpers',
   'vectordb-macro',
 ]

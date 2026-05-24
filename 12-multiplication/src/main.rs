@@ -3,7 +3,7 @@ use multiplication::{extract_function, init, llm_response};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let (args, client, mut history) = init()?;
+    let (args, client, mut history) = init(None)?;
     let mut assistant_msg = "How can I help you today?".to_string();
     let mut user_input = input(format!("Assistant: {assistant_msg}\n\nUser: "));
 
