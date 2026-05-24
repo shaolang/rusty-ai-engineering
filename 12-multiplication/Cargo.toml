@@ -1,0 +1,11 @@
+[package]
+name    = 'multiplication'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+fancy-regex  = { workspace = true }
+helpers      = { path = '../helpers' }
+openai-oxide = { workspace = true }
+serde_json   = { workspace = true }
+tokio        = { workspace = true }

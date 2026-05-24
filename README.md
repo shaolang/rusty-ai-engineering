@@ -59,6 +59,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
     and `remove_bracket_tags` for reuse by expand-query demo
 - Chapter 11: Evaluating and Optimizing RAG
   - [expand-query](./11-expand-query/src/main.rs)
+- Chapter 12: Equipping an LLM with Tools
+  - [multiplication](./12-multiplication/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

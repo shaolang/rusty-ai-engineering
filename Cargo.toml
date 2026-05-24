@@ -17,6 +17,7 @@ members  = [
   '09-rewrite-history',
   '10-reduce-hallucinations',
   '11-expand-query',
+  '12-multiplication',
   'helpers',
   'vectordb-macro',
 ]
