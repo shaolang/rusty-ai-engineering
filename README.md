@@ -55,7 +55,10 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
 - Chapter 9: Prompt Engineering
   - [rewrite-history](./09-rewrite-history/src/main.rs)
 - Chapter 10: Reducing Hallucinations
-  - [reduce-hallucinations](./10-reduce-hallucinations/src/main.rs)
+  - [reduce-hallucinations](./10-reduce-hallucinations/src/main.rs); exports `SystemPrompt`
+    and `remove_bracket_tags` for reuse by expand-query demo
+- Chapter 11: Evaluating and Optimizing RAG
+  - [expand-query](./11-expand-query/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

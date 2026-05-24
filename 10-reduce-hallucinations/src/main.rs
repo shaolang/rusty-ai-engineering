@@ -1,8 +1,7 @@
-use std::collections::HashMap;
-
 use eval_chatbot::*;
 use helpers::{Args, Result, input};
-use serde_json::Value;
+
+use reduce_hallucinations::{SystemPrompt, remove_bracket_tags};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -25,36 +24,4 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
-}
-
-fn remove_bracket_tags(text: String) -> String {
-    let regex = fancy_regex::Regex::new(r#"\[\[.*?\]\]\s*(\r?\n)?"#).expect("valid regex");
-    regex.replace_all(&text, "").to_string()
-}
-
-struct SystemPrompt {
-    chunks: HashMap<String, Record>,
-}
-
-impl SystemPrompt {
-    fn new() -> Self {
-        Self {
-            chunks: HashMap::<String, Record>::new(),
-        }
-    }
-
-    fn prepare(&mut self, records: Vec<Record>) -> Value {
-        let documentation = records
-            .iter()
-            .map(Record::to_string)
-            .collect::<Vec<String>>()
-            .join(" ");
-        let result = format!(include_str!("system-prompt.txt"), documentation);
-
-        for rec in records.into_iter() {
-            self.chunks.insert(rec.id.clone(), rec);
-        }
-
-        result.into()
-    }
 }

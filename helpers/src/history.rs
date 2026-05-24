@@ -6,7 +6,7 @@ use serde_json::Value;
 
 #[derive(Clone, Debug, serde::Serialize)]
 pub struct History {
-    messages: Vec<ResponseInputItem>,
+    pub messages: Vec<ResponseInputItem>,
 }
 
 macro_rules! add_msg {
@@ -33,6 +33,12 @@ impl History {
     fn add_msg(&mut self, role: Role, content: Value) {
         let input_item = ResponseInputItem { role, content };
         self.messages.push(input_item);
+    }
+
+    pub fn exclude_system_prompt(&self) -> History {
+        let mut cloned = self.clone();
+        cloned.messages.remove(0);
+        cloned
     }
 
     pub fn replace_system_prompt(&mut self, content: Value) {

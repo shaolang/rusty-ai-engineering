@@ -16,6 +16,7 @@ members  = [
   '08-trace-generator',
   '09-rewrite-history',
   '10-reduce-hallucinations',
+  '11-expand-query',
   'helpers',
   'vectordb-macro',
 ]

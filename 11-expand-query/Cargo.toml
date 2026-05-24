@@ -1,0 +1,13 @@
+[package]
+name    = 'expand-query'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+eval-chatbot          = { path = '../08-eval-chatbot' }
+reduce-hallucinations = { path = '../10-reduce-hallucinations' }
+fancy-regex           = { workspace = true }
+helpers               = { path = '../helpers' }
+openai-oxide          = { workspace = true }
+serde_json            = { workspace = true }
+tokio                 = { workspace = true }

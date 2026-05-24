@@ -5,6 +5,10 @@ pub struct Args {
     #[argh(option)]
     pub model: String,
 
+    /// secondary model to use for summarizing queries, etc.
+    #[argh(option)]
+    pub secondary_model: Option<String>,
+
     /// url to connect to; defaults to https://api.openai.com/v1
     #[argh(option, default = "String::from(\"https://api.openai.com/v1\")")]
     pub(crate) base_url: String,
