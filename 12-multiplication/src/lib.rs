@@ -31,21 +31,20 @@ pub async fn llm_response(args: &Args, client: &OpenAI, history: &History) -> Re
     Ok(extract_texts(&response.output, true))
 }
 
-pub fn extract_function(text: &str) -> Option<(i32, i32)> {
+pub fn extract_function(text: &str) -> Option<String> {
     let pattern =
-        fancy_regex::Regex::new(r#"(?is)<<\s*([A-Za-z_]\w*)\s*\((\d+)\s*,\s*(\d+)\)\s*>>"#)
-            .expect("valid regex");
+        fancy_regex::Regex::new(r#"(?is)<<\s*([A-Za-z_]\w*\s*\(.+\))\s*>>"#).expect("valid regex");
     match pattern.captures(text) {
-        Ok(Some(cs)) => {
-            let func = cs.get(1).unwrap();
-            if func.as_str() == "multiply" {
-                let arg1: i32 = cs.get(2).unwrap().as_str().parse().unwrap();
-                let arg2: i32 = cs.get(3).unwrap().as_str().parse().unwrap();
-                Some((arg1, arg2))
-            } else {
-                None
-            }
-        }
+        Ok(Some(cs)) => Some(cs.get(1).unwrap().as_str().to_string()),
         _ => None,
     }
+}
+
+pub fn multiply(text: &str) -> i32 {
+    let pattern = fancy_regex::Regex::new(r#"\(\s*(\d+)\s*,\s*(\d+)\s*\)"#).unwrap();
+    let matches = pattern.captures(text).unwrap().unwrap();
+    let x: i32 = matches.get(1).unwrap().as_str().parse().unwrap();
+    let y: i32 = matches.get(2).unwrap().as_str().parse().unwrap();
+
+    x * y
 }

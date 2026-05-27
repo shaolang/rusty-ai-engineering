@@ -1,5 +1,5 @@
 use helpers::{Result, input};
-use multiplication::{extract_function, init, llm_response};
+use multiplication::{extract_function, init, llm_response, multiply};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -13,9 +13,9 @@ async fn main() -> Result<()> {
         let llm_response = llm_response(&args, &client, &history).await?;
 
         assistant_msg = match extract_function(&llm_response) {
-            Some((x, y)) => {
+            Some(func) => {
                 println!("\t\tCalculated by tool");
-                format!("{}", x * y)
+                format!("{}", multiply(&func))
             }
             None => llm_response,
         };

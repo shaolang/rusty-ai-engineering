@@ -1,5 +1,5 @@
 use helpers::{Result, input};
-use multiplication::{extract_function, init, llm_response};
+use multiplication::{extract_function, init, llm_response, multiply};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -20,8 +20,8 @@ async fn main() -> Result<()> {
         let response = llm_response(&args, &client, &history).await?;
 
         assistant_msg = match extract_function(&response) {
-            Some((x, y)) => {
-                let answer = x * y;
+            Some(func) if func.starts_with("multiply") => {
+                let answer = multiply(&func);
                 history.add_user_msg(format!(
                     "Here is information to use to respond to the user's previous query:
                      <info>{answer}</info>"
@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
                     .trim()
                     .to_string()
             }
-            None => response,
+            _ => response,
         };
 
         user_input = input(format!("Assistant: {assistant_msg}\n\nUser: "));
