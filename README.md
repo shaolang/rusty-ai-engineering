@@ -65,6 +65,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
     and website-reader demos
   - [feed-results-back](./12-feed-results-back/src/main.rs)
   - [website-reader](./12-website-reader/src/main.rs)
+  - [tools-api](./12-tools-api/src/main.rs): for simplicity, this assumes there's only one function
+    call per user input; this demo only reuses the `helpers` package
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

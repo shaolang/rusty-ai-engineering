@@ -1,10 +1,7 @@
 use eval_chatbot::*;
 use helpers::{Args, History, Result, input};
 
-use openai_oxide::{
-    OpenAI,
-    types::{chat::Role, responses::ResponseCreateRequest},
-};
+use openai_oxide::{OpenAI, types::responses::ResponseCreateRequest};
 use reduce_hallucinations::{SystemPrompt, remove_bracket_tags};
 
 #[tokio::main]
@@ -61,12 +58,13 @@ impl ToString for Conversation {
             .messages
             .iter()
             .map(|rec| {
-                let role = match rec.role {
-                    Role::Assistant => "Assistant",
-                    Role::User => "User",
-                    _ => "Unknown",
-                };
-                format!("{}: {}", role, rec.content.to_string())
+                serde_json::to_string(rec).unwrap()
+                // let role = match rec.role {
+                //     Role::Assistant => "Assistant",
+                //     Role::User => "User",
+                //     _ => "Unknown",
+                // };
+                // format!("{}: {}", role, rec.content.to_string())
             })
             .collect::<Vec<String>>()
             .join(" ")

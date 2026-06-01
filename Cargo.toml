@@ -20,6 +20,7 @@ members  = [
   '12-multiplication',
   '12-feed-results-back',
   '12-website-reader',
+  '12-tools-api',
   'helpers',
   'vectordb-macro',
 ]
