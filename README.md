@@ -55,7 +55,8 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
 - Chapter 9: Prompt Engineering
   - [rewrite-history](./09-rewrite-history/src/main.rs)
 - Chapter 10: Reducing Hallucinations
-  - [reduce-hallucinations](./10-reduce-hallucinations/src/main.rs); exports `SystemPrompt`
+  - [reduce-hallucinations](./10-reduce-hallucinations/src/main.rs);
+    [exports](./10-reduce-hallucinations/src/lib.rs) `SystemPrompt`
     and `remove_bracket_tags` for reuse by expand-query demo
 - Chapter 11: Evaluating and Optimizing RAG
   - [expand-query](./11-expand-query/src/main.rs)
@@ -66,7 +67,10 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [feed-results-back](./12-feed-results-back/src/main.rs)
   - [website-reader](./12-website-reader/src/main.rs)
   - [tools-api](./12-tools-api/src/main.rs): for simplicity, this assumes there's only one function
-    call per user input; this demo only reuses the `helpers` package
+    call per user input; this demo only reuses the `helpers` package and
+    [exports some functionalities](./12-tools-api/src/lib.rs) for reuse in agent-loop
+- Chapter 13: Running the Agent Loop
+  - [agent-loop](./13-agent-loop/src/main.rs)
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

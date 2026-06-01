@@ -1,7 +1,6 @@
 use helpers::{Args, History, Result, create_openai_client, extract_texts, input};
 use openai_oxide::types::responses::Response;
 use serde_json::Value;
-
 use tools_api::{Tool, new_request, read_webpage, tools};
 
 #[tokio::main]
@@ -25,7 +24,13 @@ async fn main() -> Result<()> {
             .responses()
             .create(new_request(&args, &history, &tools))
             .await?;
-        if let Some((fn_call, call_id, tool)) = find_function_call(&resp) {
+
+        let mut tool_calls = get_function_calls(&resp);
+        loop {
+            let Some((fn_call, call_id, tool)) = tool_calls.pop_front() else {
+                break;
+            };
+
             let result = match tool {
                 Tool::Multiply {
                     first_number,
@@ -37,6 +42,7 @@ async fn main() -> Result<()> {
             history.add_function_call_output(&call_id, format!("{result}"));
             let req = new_request(&args, &history, &tools);
             resp = client.responses().create(req).await?;
+            tool_calls.append(&mut get_function_calls(&resp));
         }
 
         assistant_msg = extract_texts(&resp.output, true);
@@ -46,17 +52,20 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-fn find_function_call(resp: &Response) -> Option<(Value, String, Tool)> {
-    resp.function_calls().pop().map(|r| {
-        let json = serde_json::json!({r.name.clone(): r.arguments});
-        let tool: Tool = serde_json::from_value(json).unwrap();
-        let args = serde_json::to_string(&r.arguments).unwrap();
-        let fn_call = serde_json::json!({
-            "type": "function_call",
-            "call_id": r.call_id,
-            "name": r.name,
-            "arguments": args,
-        });
-        (fn_call, r.call_id, tool)
-    })
+fn get_function_calls(resp: &Response) -> std::collections::VecDeque<(Value, String, Tool)> {
+    resp.function_calls()
+        .iter()
+        .map(|r| {
+            let json = serde_json::json!({r.name.clone(): r.arguments});
+            let tool: Tool = serde_json::from_value(json).unwrap();
+            let args = serde_json::to_string(&r.arguments).unwrap();
+            let fn_call = serde_json::json!({
+                "type": "function_call",
+                "call_id": r.call_id,
+                "name": r.name,
+                "arguments": args,
+            });
+            (fn_call, r.call_id.clone(), tool)
+        })
+        .collect()
 }
