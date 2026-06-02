@@ -1,0 +1,21 @@
+[package]
+name    = 'podcast-agent'
+version = '0.1.0'
+edition = '2024'
+
+[dependencies]
+any-tts      = { version='0.1', features=['download', 'kokoro'], default-features=false }
+duckduckgo   = { workspace = true }
+helpers      = { path = '../helpers' }
+openai-oxide = { workspace = true }
+reqwest      = { workspace = true }
+scraper      = { workspace = true }
+serde        = { workspace = true }
+serde_json   = { workspace = true }
+tokio        = { workspace = true }
+
+[target.aarch64-apple-darwin.dependencies]
+any-tts = { version='0.1', features=['accelerate', 'download', 'kokoro', 'metal'], default-features=false }
+
+[target.'cfg(featuree="cuda")'.dependencies]
+any-tts = { version='0.1', features=['cuda', 'download', 'kokoro'], default-features=false }

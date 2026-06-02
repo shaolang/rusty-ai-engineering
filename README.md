@@ -71,6 +71,9 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
     [exports some functionalities](./12-tools-api/src/lib.rs) for reuse in agent-loop
 - Chapter 13: Running the Agent Loop
   - [agent-loop](./13-agent-loop/src/main.rs)
+  - [podcast-agent](./13-podcast-agent/src/main.rs): instead of using an OpenAI audio model,
+    this port uses [any-tts][any-tts] for generating the audio locally using the open-weight TTS
+    model [kokoro-tts][kokoro-tts]
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
@@ -89,9 +92,11 @@ For convenience, all the files in `resources` directory are copied from the
 [book's source code][book]; the copyright of those files belong to the book's author and
 the publisher.
 
+[any-tts]: https://github.com/Rheosoph/any-tts
 [book]: https://pragprog.com/titles/jwpaieng/a-common-sense-guide-to-ai-engineering/
 [extract-texts]: ./helpers/src/openai.rs
 [fastembed-rs]: https://github.com/Anush008/fastembed-rs
+[kokoro-tts]: https://huggingface.co/spaces/hexgrad/Kokoro-TTS
 [lancedb]: https://docs.lancedb.com/#1-lancedb-oss
 [resp-create]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/resources/responses/struct.Responses.html#method.create
 [resp-output-text]: https://docs.rs/openai-oxide/0.14.0/openai_oxide/types/responses/struct.Response.html#method.output_text
