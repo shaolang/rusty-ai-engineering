@@ -21,20 +21,24 @@ pub async fn search_web(query: impl AsRef<str>) -> Vec<String> {
     results.iter().map(|r| r.url.clone()).collect()
 }
 
-pub fn create_audio(script: impl AsRef<str>) -> String {
-    use any_tts::{ModelType, SynthesisRequest, TtsConfig, load_model};
+pub async fn create_audio(script: impl AsRef<str>) -> String {
+    let script = script.as_ref().to_string();
 
-    let model = load_model(TtsConfig::new(ModelType::Kokoro)).expect("TTS model loaded");
-    let audio = model
-        .synthesize(
-            &SynthesisRequest::new(script.as_ref())
-                .with_language("en-us")
-                .with_voice("af_heart"),
-        )
-        .expect("audio created");
+    tokio::task::spawn_blocking(|| {
+        use any_tts::{ModelType, SynthesisRequest, TtsConfig, load_model};
 
-    let fname = "podcast.wav";
-    audio.save_wav(fname).expect("podcast written to disk");
+        let model = load_model(TtsConfig::new(ModelType::Kokoro)).expect("TTS model loaded");
+        let audio = model
+            .synthesize(
+                &SynthesisRequest::new(script)
+                    .with_language("en-us")
+                    .with_voice("af_heart"),
+            )
+            .expect("audio created");
 
-    fname.to_string()
+        let fname = "podcast.wav";
+        audio.save_wav(fname).expect("podcast written to disk");
+
+        fname.to_string()
+    }).await.unwrap()
 }

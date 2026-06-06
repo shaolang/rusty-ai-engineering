@@ -46,11 +46,7 @@ async fn main() -> Result<()> {
                     Tool::SearchWeb { query } => {
                         serde_json::to_string(&search_web(query).await).unwrap()
                     }
-                    Tool::CreateAudio { script } => {
-                        tokio::task::spawn_blocking(|| create_audio(script))
-                            .await
-                            .unwrap()
-                    }
+                    Tool::CreateAudio { script } => create_audio(script).await
                 };
                 history.add_function_call_msg(&fcall);
                 history.add_function_call_output(&fcall.call_id, result.as_str());
