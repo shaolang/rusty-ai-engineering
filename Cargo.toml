@@ -23,6 +23,7 @@ members  = [
   '12-tools-api',
   '13-agent-loop',
   '13-podcast-agent',
+  '14-agentic-workflow',
   'helpers',
   'vectordb-macro',
 ]
