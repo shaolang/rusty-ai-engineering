@@ -1,6 +1,6 @@
 use openai_oxide::types::{
     chat::Role,
-    responses::{ResponseInput, ResponseInputItem},
+    responses::{FunctionCall, ResponseInput, ResponseInputItem},
 };
 use serde_json::Value;
 
@@ -36,8 +36,13 @@ impl History {
         self.messages.push(input_item);
     }
 
-    pub fn add_function_call_msg(&mut self, msg: impl Into<Value>) {
-        self.messages.push(msg.into());
+    pub fn add_function_call_msg(&mut self, fcall: &FunctionCall) {
+        self.messages.push(serde_json::json!({
+            "type": "function_call",
+            "call_id": fcall.call_id,
+            "name": fcall.name,
+            "arguments": fcall.arguments.to_string(),
+        }));
     }
 
     pub fn add_function_call_output(&mut self, call_id: &str, result: impl Into<Value>) {

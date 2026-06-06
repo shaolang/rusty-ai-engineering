@@ -39,7 +39,7 @@ impl ResponseOutputItemExt for ResponseOutputItem {
                 let ResponseOutputContent { text: Some(t), .. } = c else {
                     return None;
                 };
-                Some(t.as_str())
+                Some(t.trim())
             })
             .collect::<Vec<&str>>()
             .join("\n")

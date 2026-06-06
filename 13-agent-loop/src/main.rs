@@ -1,6 +1,5 @@
 use helpers::{Args, History, Result, create_openai_client, extract_texts, input};
-use openai_oxide::types::responses::Response;
-use serde_json::Value;
+use openai_oxide::types::responses::{FunctionCall, Response};
 use tools_api::{Tool, new_request, read_webpage, tools};
 
 #[tokio::main]
@@ -27,7 +26,7 @@ async fn main() -> Result<()> {
 
         let mut tool_calls = get_function_calls(&resp);
         loop {
-            let Some((fn_call, call_id, tool)) = tool_calls.pop_front() else {
+            let Some((fn_call, tool)) = tool_calls.pop_front() else {
                 break;
             };
 
@@ -38,8 +37,8 @@ async fn main() -> Result<()> {
                 } => serde_json::json!(first_number * second_number),
                 Tool::ReadWebpage { url } => serde_json::Value::String(read_webpage(url).await),
             };
-            history.add_function_call_msg(fn_call);
-            history.add_function_call_output(&call_id, format!("{result}"));
+            history.add_function_call_msg(&fn_call);
+            history.add_function_call_output(&fn_call.call_id, format!("{result}"));
             let req = new_request(&args, &history, &tools);
             resp = client.responses().create(req).await?;
             tool_calls.append(&mut get_function_calls(&resp));
@@ -52,20 +51,15 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_function_calls(resp: &Response) -> std::collections::VecDeque<(Value, String, Tool)> {
+fn get_function_calls(resp: &Response) -> std::collections::VecDeque<(FunctionCall, Tool)> {
     resp.function_calls()
-        .iter()
-        .map(|r| {
-            let json = serde_json::json!({r.name.clone(): r.arguments});
+        .clone()
+        .into_iter()
+        .map(|fn_call| {
+            let json = serde_json::json!({fn_call.name.clone(): fn_call.arguments});
             let tool: Tool = serde_json::from_value(json).unwrap();
-            let args = serde_json::to_string(&r.arguments).unwrap();
-            let fn_call = serde_json::json!({
-                "type": "function_call",
-                "call_id": r.call_id,
-                "name": r.name,
-                "arguments": args,
-            });
-            (fn_call, r.call_id.clone(), tool)
+
+            (fn_call, tool)
         })
         .collect()
 }
