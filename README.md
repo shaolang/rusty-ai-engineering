@@ -5,8 +5,10 @@ Pragmatic Programmers.
 
 Most ports expect the environment variable `OPENAI_API_KEY` set and support the follow
 CLI arguments:
-- `--model`: use the specified the model for the demo
+- `--model`: use the specified model for the demo
 - `--base-url`: connect to model at the specified url; defaults to `https://api.openai.com/v1`
+- `--secondary-model`: use the specified model as the secondary one for demo; currently only
+  expand-query demo from chapter 11 uses this
 - `--temperature`: set the model's temperature; defaults to 0.0
 - `--help`:  show the arguments available
 
@@ -74,6 +76,9 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [podcast-agent](./13-podcast-agent/src/main.rs): instead of using an OpenAI audio model,
     this port uses [any-tts][any-tts] for generating the audio locally using the open-weight TTS
     model [kokoro-tts][kokoro-tts]
+- Chapter 14: Architecting Agentic Workflow
+  - [agentic-workflow](./14-agentic-workflow/src/main.rs): `main.rs` contains the main (interactive)
+    loop; its [`lib.rs`](./14-agentic-workflow/src/lib.rs) houses the workflow
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
