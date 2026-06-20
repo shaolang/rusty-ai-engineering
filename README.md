@@ -75,10 +75,14 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
   - [agent-loop](./13-agent-loop/src/main.rs)
   - [podcast-agent](./13-podcast-agent/src/main.rs): instead of using an OpenAI audio model,
     this port uses [any-tts][any-tts] for generating the audio locally using the open-weight TTS
-    model [kokoro-tts][kokoro-tts]
+    model [kokoro-tts][kokoro-tts]; its [`lib.rs`](./13-podcast-agent/src/lib.rs) exports
+    tool functions for reuse in agentic-workflow and agentic-rag
 - Chapter 14: Architecting Agentic Workflow
   - [agentic-workflow](./14-agentic-workflow/src/main.rs): `main.rs` contains the main (interactive)
     loop; its [`lib.rs`](./14-agentic-workflow/src/lib.rs) houses the workflow
+- Chapter 15: Implementing a RAG Agent
+  - [agentic-rag](./15-agentic-rag/src/main.rs): this port doesn't assume the presence of the
+    vector database, thus it contains the populating of the vector database.
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities

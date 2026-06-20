@@ -76,3 +76,41 @@ impl From<&History> for ResponseInput {
         Self::Items(history.messages.clone())
     }
 }
+
+impl ToString for History {
+    fn to_string(&self) -> String {
+        // let mut ss: Vec<String> = Vec::with_capacity(self.messages.len());
+
+        // for msg in self.messages {
+        //     let msg = msg.as_object().unwrap();
+        //     if msg.contains_key("role") {
+        //         ss.push(format!("{}: {}", msg["role"], msg["content"]));
+        //     } else if msg.contains_key("type") {
+        //     }
+        // }
+
+        // ss.join("\n")
+        self.messages
+            .iter()
+            .map(|msg| {
+                let msg = msg.as_object().unwrap();
+                if msg.contains_key("role") {
+                    format!("{}: {}", msg["role"], msg["content"])
+                } else if msg.contains_key("type") && msg["type"] == "function_call" {
+                    format!(
+                        "function_call {} {}: {}",
+                        msg["call_id"], msg["name"], msg["arguments"]
+                    )
+                } else if msg.contains_key("type") && msg["type"] == "function_call_output" {
+                    format!(
+                        "function_call_output {} {}: {}",
+                        msg["call_id"], msg["name"], msg["output"]
+                    )
+                } else {
+                    "".to_string()
+                }
+            })
+            .collect::<Vec<String>>()
+            .join("\n")
+    }
+}

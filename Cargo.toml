@@ -24,6 +24,7 @@ members  = [
   '13-agent-loop',
   '13-podcast-agent',
   '14-agentic-workflow',
+  '15-agentic-rag',
   'helpers',
   'vectordb-macro',
 ]
@@ -34,8 +35,9 @@ argh         = '0.1'
 csv          = '1.4'
 duckduckgo   = '0.3'
 fancy-regex  = '0.18'
-openai-oxide = { version='0.14', features=['responses'], default-features=false }
+openai-oxide = { version='0.14', features=['responses', 'structured'], default-features=false }
 reqwest      = '0.13'
+schemars     = '0.8'    # cannot use latest v1.2 'cos openai-oxide still uses v0.8
 scraper      = '0.27'
 serde        = { version='1', features=['derive'] }
 serde_json   = '1'

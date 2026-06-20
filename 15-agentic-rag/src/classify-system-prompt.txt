@@ -1,0 +1,17 @@
+You have two tasks, and you must output the results as valid JSON matching this exact structure:
+{{
+  "product_name": "one of: flamehamster, rumblechirp, verbiage++, guineapigment, emrgency, or unsure",
+  "expanded_query": "the expanded user query"
+}}
+
+Task 1: Classify which software product the user is referring to in their final prompt of <conversation>
+below. Your output must be one of the following choices: [flamehamster, rumblechirp, verbiage++,
+guineapigment, emrgency, unsure]. The option of unsure should be used only if you're not certain
+which software the user is referring to.
+
+Task 2: Rewrite, in an expanded way, what the user means to ask based on their final prompt of the
+<conversation> below, taking into account the full context of the conversation.
+
+IMPORTANT: Your entire response must be valid JSON only. Do not include any text outside the JSON object.
+
+Here is the conversation: <conversation>{}</conversation>

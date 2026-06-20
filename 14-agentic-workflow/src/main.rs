@@ -82,20 +82,18 @@ async fn llm_response(
 }
 
 fn tools() -> Vec<ResponseTool> {
-    vec![
-        ResponseTool::Function {
-            name: "initiate-podcast".to_string(),
-            description: Some("Generates an audio podcast as a file called podcast.wav".to_string()),
-            parameters: Some(serde_json::json!({
-                "type": "object",
-                "properties": {
-                    "podcast_description": {
-                        "type": "string",
-                    }
-                },
-                "required": ["podcast_description"]
-            })),
-            strict: Some(true),
-        }
-    ]
+    vec![ResponseTool::Function {
+        name: "initiate-podcast".to_string(),
+        description: Some("Generates an audio podcast as a file called podcast.wav".to_string()),
+        parameters: Some(serde_json::json!({
+            "type": "object",
+            "properties": {
+                "podcast_description": {
+                    "type": "string",
+                }
+            },
+            "required": ["podcast_description"]
+        })),
+        strict: Some(true),
+    }]
 }

@@ -40,5 +40,7 @@ pub async fn create_audio(script: impl AsRef<str>) -> String {
         audio.save_wav(fname).expect("podcast written to disk");
 
         fname.to_string()
-    }).await.unwrap()
+    })
+    .await
+    .unwrap()
 }

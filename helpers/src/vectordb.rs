@@ -65,6 +65,26 @@ impl VectorDb {
         query: impl AsRef<str>,
         topk: usize,
     ) -> Result<Vec<E>> {
+        Ok(self._search(query, topk, None).await?)
+    }
+
+    pub async fn search_with_filter<E: Embed + 'static>(
+        &self,
+        query: impl AsRef<str>,
+        topk: usize,
+        (col, val): (impl Into<String>, impl Into<String>),
+    ) -> Result<Vec<E>> {
+        Ok(self
+            ._search(query, topk, Some((col.into(), val.into())))
+            .await?)
+    }
+
+    async fn _search<E: Embed + 'static>(
+        &self,
+        query: impl AsRef<str>,
+        topk: usize,
+        filter: Option<(String, String)>,
+    ) -> Result<Vec<E>> {
         let embedding: Vec<f32> = {
             let mut embedder = self.embedder.lock().unwrap();
             let es = embedder.embed(&[query.as_ref()], None)?;
@@ -75,12 +95,20 @@ impl VectorDb {
             .conn
             .call(move |conn| {
                 use zerocopy::IntoBytes;
-                let mut stmt = conn.prepare(&E::search_stmt()).unwrap();
+                let (stmt, params) = if let Some((col, val)) = filter {
+                    (
+                        format!("{} AND {} = ?3", E::search_stmt(), col),
+                        tokio_rusqlite::rusqlite::params![embedding.as_bytes(), topk, val.clone()],
+                    )
+                } else {
+                    (
+                        E::search_stmt(),
+                        tokio_rusqlite::rusqlite::params![embedding.as_bytes(), topk],
+                    )
+                };
+                let mut stmt = conn.prepare(&stmt).unwrap();
 
-                let rows = stmt.query_map(
-                    tokio_rusqlite::rusqlite::params![embedding.as_bytes(), topk],
-                    |row| Ok(row.into()),
-                )?;
+                let rows = stmt.query_map(params, |row| Ok(row.into()))?;
 
                 rows.collect()
             })
