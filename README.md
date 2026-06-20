@@ -83,6 +83,9 @@ OPENAI_API_KEY=<api-key> cargo run -p hello-world -- ...
 - Chapter 15: Implementing a RAG Agent
   - [agentic-rag](./15-agentic-rag/src/main.rs): this port doesn't assume the presence of the
     vector database, thus it contains the populating of the vector database.
+    - One important note: [classify prompt text](./15-agentic-rag/src/classify-system-prompt.txt)
+      adds the explicit instruction to output the response that matches `ConversationData`; without
+      that explicit instruction, the demo doesn't work with local models, even OpenAI OSS ones.
 
 ### Notable differences
 Other than the port in chapter 1, all other ports use commonly used functionalities
